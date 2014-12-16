@@ -4,22 +4,182 @@
 <meta charset="UTF-8" />
 <title>Salmon</title>
 
+<!--styles -->
+<link rel="stylesheet" href="/assets/css/style.css" />
+
 <!-- Javascript -->
-<script type="text/javascript" language="javascript" src="assets/js/jquery.js" ></script>
-<script type="text/javascript" language="javascript" src="assets/js/fin.js" ></script>
-<script type="text/javascript" language="javascript" src="assets/js/extras.fin.js" ></script>
+<script type="text/javascript" language="javascript" src="/assets/js/jquery.js" ></script>
+<script type="text/javascript" language="javascript" src="/assets/js/fin.js" ></script>
 <script type="text/javascript" language="javascript">
 
-
+// todo: this should be a separate js file that's minified.
 // configure app
 fin.init({
+    containers: ['container', 'contentContainer', 'submenu', 'sidebar', 'content'], // required for specifying container render order
     navigate: { // a list of 'pages' defined as functions to run and container->templates to render
+
+        global: {   
+            require: ['func'],         
+            before_func: [ ['fin.fn.func.configureApp'] ],
+            container: ['page'],
+            after_func: [ ['fin.fn.func.selectMenu'] ]
+        },
+        home: {
+            parents: ['global'],
+            contentContainer: []
+        },
         // landing
-        home: {            
-            container: ['welcome'],            
+
+        /* Salmon */
+        salmon: {
+            parents: ['global'],
+            contentContainer: ['content.with.sidebar'],
+            submenu: ['salmon_submenu']
+        },
+            salmon_start: {   
+                parents: ['salmon'],
+                sidebar: ['salmon_start_sidebar']           
+            },
+                salmon_start_intro: {
+                    parents: ['salmon_start'],
+                    content: ['salmon_start_intro'] 
+                },
+                salmon_start_why: {
+                    parents: ['salmon_start'],
+                    content: ['salmon_start_why'] 
+                },
+                salmon_start_tools: {
+                    parents: ['salmon_start'],
+                    content: ['salmon_start_tools'] 
+                },
+                salmon_start_contribute: {
+                    parents: ['salmon_start'],
+                    content: ['salmon_start_contribute'] 
+                },
+            salmon_using: {   
+                parents: ['salmon'],
+                sidebar: ['salmon_using_sidebar']           
+            },
+                salmon_using_hello: {
+                    parents: ['salmon_using'],
+                    content: ['salmon_using_hello'] 
+                },
+                salmon_using_dependencies: {
+                    parents: ['salmon_using'],
+                    content: ['salmon_using_dependencies'] 
+                },
+                salmon_using_folders: {
+                    parents: ['salmon_using'],
+                    content: ['salmon_using_folders'] 
+                },
+                salmon_using_templates: {
+                    parents: ['salmon_using'],
+                    content: ['salmon_using_templates'] 
+                },
+                salmon_using_forms: {
+                    parents: ['salmon_using'],
+                    content: ['salmon_using_forms'] 
+                },
+                salmon_using_data: {
+                    parents: ['salmon_using'],
+                    content: ['salmon_using_data'] 
+                },
+                salmon_using_plugins: {
+                    parents: ['salmon_using'],
+                    content: ['salmon_using_plugins'] 
+                },
+            salmon_api: {   
+                parents: ['salmon'],
+                sidebar: ['salmon_api_sidebar']           
+            },
+                salmon_api_fin: {
+                    parents: ['salmon_api'],
+                    content: ['salmon_api_fin'] 
+                },
+
+        /* Guppy */
+        guppy: {
+            parents: ['global'],
+            contentContainer: ['content.with.sidebar'],
+            submenu: ['guppy_submenu']
+        },
+            guppy_start: {
+                parents: ['guppy'],
+                sidebar: ['guppy_start_sidebar']
+            },
+            guppy_start_intro: {
+                parents: ['guppy_start'],
+                content: ['guppy_start_content'] 
+            },
+
+        /* Fishtank */
+        fishtank: {
+            parents: ['global'],
+            contentContainer: ['content.with.sidebar'],
+            submenu: ['fishtank_submenu']
+        },
+            fishtank_start: {
+                parents: ['fishtank'],
+                sidebar: ['fishtank_start_sidebar']
+            },
+            fishtank_start_intro: {
+                parents: ['fishtank_start'],
+                content: ['fishtank_start_content'] 
+            },
+
+        /* Aquatic */
+        aquatic: {
+            parents: ['global'],
+            contentContainer: ['content.with.sidebar'],
+            submenu: ['aquatic_submenu']
+        },
+            aquatic_start: {
+                parents: ['aquatic'],
+                sidebar: ['aquatic_start_sidebar']
+            },
+            aquatic_start_intro: {
+                parents: ['aquatic_start'],
+                content: ['aquatic_start_content'] 
+            },
+
+        /* Blog */
+        blog: {
+            parents: ['global'],
+            contentContainer: ['content.with.sidebar'],
+            submenu: ['blog_submenu'],
+            sidebar: ['blog_sidebar'],
+            content: ['blog_content']
         }
-    },    
+    },        
     routes: { // a map of hashbang urls to navigate templates
+        /* Salmon */
+        'salmon': 'salmon_start_intro', 
+        'salmon/start/why': 'salmon_start_why',
+        'salmon/start/tools': 'salmon_start_tools',
+        'salmon/start/contribute': 'salmon_start_contribute',
+        
+        'salmon/using': 'salmon_using_hello',
+        'salmon/using/hello': 'salmon_using_hello',
+        'salmon/using/dependencies': 'salmon_using_dependencies',
+        'salmon/using/folders': 'salmon_using_folders',
+        'salmon/using/templates': 'salmon_using_templates',
+        'salmon/using/forms': 'salmon_using_forms',
+        'salmon/using/data': 'salmon_using_data',
+        'salmon/using/plugins': 'salmon_using_plugins',
+        
+        'salmon/api': 'salmon_api_fin',
+
+        /* Guppy */
+        'guppy': 'guppy_start_intro',
+
+        /* Fishtank */
+        'fishtank': 'fishtank_start_intro',
+
+        /* Aquatic */
+        'aquatic': 'aquatic_start_intro',
+
+        /* Blog */
+        'blog': 'blog'
 
     },
     callbacks: { // events and callbacks to extend highfin
@@ -29,9 +189,13 @@ fin.init({
 })
 
 
-</script>
-<body id="container">
 
+</script>
+<body id="body">
+
+<div id="container">
+
+</div>
 
 
 </body>
