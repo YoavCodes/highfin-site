@@ -1,0 +1,131 @@
+<h1>Initializing with <code>fin.init()</code></h1>
+
+<div class="signature"><span class="fn">fin.init( <span class="parameter">configuration</span> )</span> <span class="returns">Returns: <a class="type" href="/#!/{{ fin._meta.hashbang }}">undefined</a></span>
+    <div class="description">Typically called before DOM ready. Initializes fin.</div>
+    <div class="params">
+        <div class="param"><span class="parameter">configuration</span> : <a class="type" href="/#!/salmon/api/init">configuration</a></div>
+        <div class="description">An object containing settings to configure fin for your app.</div>       
+    </div>
+</div>
+
+<p>The following is an example configuration for a basic app. The default page is home, when the page is loaded fin will fetch the welcome template from <code>/templates/welcome.html</code> and render it into <code>mainContainer</code>.</p>
+
+<pre class="prettyprint">
+<code>[[  print( fin.fn.escapeHtml(`
+<html>
+<head>
+...
+<script type="text/javascript" language="javascript">
+// configure and init app
+fin.init({
+    containers: ['mainContainer'],
+    navigate: { 
+        // landing
+        home: {            
+            mainContainer: ['welcome']            
+        }
+    },    
+    routes: { // a map of hashbang urls to navigate templates
+
+    },
+    callbacks: { // events and callbacks to extend highfin
+        
+    },
+    default_page: 'home'
+})
+</script>
+</head>
+<body>
+    <div id="mainContainer"></div>
+</body>
+</html>
+`) ) ]]</code>
+</pre>
+
+<h2>Containers</h2>
+<p>This is an array that explicitly states the order of container rendering. You can declare as many containers as you like here. In the example above we created a container by adding a div with id mainContainer to the body. Containers can also be added by templates or subtemplates.</p>
+<h2>Navigate</h2>
+<p>The navigate object is where you declare 'pages'. Each key in the navigate object is a key name corresponding to a page object. The page object's keys correspond to the containers and the array lists the templates and order of templates to render into that container.</p>
+<p>There are several reserved keys that can be added to any page.</p>
+
+<pre class="prettyprint">
+<code>[[  print( fin.fn.escapeHtml(`
+
+fin.init({
+    containers: ['mainContainer'],
+    navigate: { 
+        // landing
+        global: {
+            require: ['func'],
+            before_func: [ ['fin.fn.test', {msg: 'hi'}] ],        
+            after_func: [ ['fin.fn.test', {msg: 'goodbye'}] ],
+            mainContainer: ['header']
+        },
+        home: {    
+            parents: ['global'],           
+            mainContainer: ['welcome']            
+        }
+    },    
+    routes: { // a map of hashbang urls to navigate templates
+
+    },
+    callbacks: { // events and callbacks to extend highfin
+        
+    },
+    default_page: 'home'
+})
+`) ) ]]</code>
+</pre>
+<h3>Require</h3>
+<p>In the example above we've added another page <code>global</code>. The global page has a <code>require</code> line which tells fin to make sure it's loaded the template at <code>/templates/func.js</code> before navigating to the global page. The func.js template contains an exported function called <code>test()</code> which is autonamespaced to <code>fin.fn.test</code>.</p>
+
+<h3>Before_func and After_func</h3>
+<p>The <code>global</code> page also has <code>before_func</code> and <code>after_func</code> properties. These are arrays of arrays listing <a href="/#!/salmon/api/dotnotation">dotNotation</a> paths to functions and a named args object that's used with <a href="/#!/salmon/api/curry"><code>Function.prototype.curry()</code></a> to call each function before or after the page has been rendered.</p>
+
+<h3>Parents</h3>
+<p>The <code>home</code> page now has a <code>parents</code> property pointing to the <code>global</code> page. This means that when navigating to the home page fin will first render the <code>header</code> template into <code>mainContainer</code> and then the <code>welcome</code> template. Any page can be a parent, and pages can have multiple parents listed in order of inheritance. The home page also inherits the before/after_funcs, require, and parents properties from it's parents and grandparents.</p>
+
+<pre class="prettyprint">
+<code>[[  print( fin.fn.escapeHtml(`
+
+fin.init({
+    containers: ['mainContainer'],
+    navigate: { 
+        // landing
+        global: {
+            require: ['func'],
+            before_func: [ ['fin.fn.test', {msg: 'hi'}] ],        
+            after_func: [ ['fin.fn.test', {msg: 'goodbye'}] ],
+            mainContainer: ['header']
+        },
+        home: {    
+            parents: ['global'],           
+            mainContainer: ['welcome']            
+        },
+        blog: {
+            parents: ['global'],
+            mainContainer: ['blog']
+        },        
+        about: {
+            parents: ['global'],
+            mainContainer: ['about']
+        }
+    },    
+    routes: { // a map of hashbang urls to navigate templates
+        "blog": "blog"
+        "company/about": "about"
+    },
+    callbacks: { // events and callbacks to extend highfin
+        
+    },
+    default_page: 'home'
+})
+`) ) ]]</code>
+</pre>
+
+<h3>Routes</h3>
+<p>The <code>routes</code> object is a map between hashbang paths and pages defined in the navigate object.</p>
+<p>In the example above we've added two new pages, and a set of routes. The two routes specified match <code>http://localhost/#!/blog</code> and <code>http://localhost/#!/coupany/about</code> which would render the coresponding <code>blog</code> or <code>about</code> pages. If you were to visit <code>http://localhost/</code> the home page would be rendered because no routes match and home is the deafult page. If you visit <code>http://localhost/#!/blog</code> the <code>blog</code> page would be rendered. If you visit <code>http://localhost/#!/blog/page/3</code> fin would look for a route matching <code>blog/page/3</code> which there is none, then it would try<code> blog/page</code> until it finds <code>blog</code>. If the <code>blog</code> route hadn't been defined it would fallback to the <code>default_page</code>.</p>
+
+<h3>Callbacks</h3>
+<p>Finally the <code>callbacks</code> object allows you to specify your own functions for a variety of hooks peppered throughout fin's methods.</p>

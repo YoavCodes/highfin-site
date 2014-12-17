@@ -6,7 +6,6 @@
 
 <!--styles -->
 <link rel="stylesheet" href="/assets/css/style.css" />
-<link rel="stylesheet" href="/assets/css/prettify.css" />
 
 <!-- Javascript -->
 <script type="text/javascript" language="javascript" src="/assets/js/jquery.js" ></script>
@@ -102,6 +101,14 @@ fin.init({
                     parents: ['salmon_api'],
                     content: ['salmon_api_finsort'] 
                 },
+                salmon_api_init: {
+                    parents: ['salmon_api'],
+                    content: ['salmon_api_init'] 
+                },
+                salmon_api_dotnotation: {
+                    parents: ['salmon_api'],
+                    content: ['salmon_api_dotnotation'] 
+                },
 
         /* Guppy */
         guppy: {
@@ -115,7 +122,15 @@ fin.init({
             },
             guppy_start_intro: {
                 parents: ['guppy_start'],
-                content: ['guppy_start_content'] 
+                content: ['guppy_start_intro'] 
+            },
+            guppy_start_why: {
+                parents: ['guppy_start'],
+                content: ['guppy_start_why'] 
+            },
+            guppy_start_contribute: {
+                parents: ['guppy_start'],
+                content: ['guppy_start_contribute'] 
             },
 
         /* Fishtank */
@@ -130,7 +145,15 @@ fin.init({
             },
             fishtank_start_intro: {
                 parents: ['fishtank_start'],
-                content: ['fishtank_start_content'] 
+                content: ['fishtank_start_intro'] 
+            },
+            fishtank_start_why: {
+                parents: ['fishtank_start'],
+                content: ['fishtank_start_why'] 
+            },
+            fishtank_start_contribute: {
+                parents: ['fishtank_start'],
+                content: ['fishtank_start_contribute'] 
             },
 
         /* Aquatic */
@@ -145,11 +168,19 @@ fin.init({
             },
             aquatic_start_intro: {
                 parents: ['aquatic_start'],
-                content: ['aquatic_start_content'] 
+                content: ['aquatic_start_intro'] 
+            },
+            aquatic_start_why: {
+                parents: ['aquatic_start'],
+                content: ['aquatic_start_why'] 
+            },
+            aquatic_start_contribute: {
+                parents: ['aquatic_start'],
+                content: ['aquatic_start_contribute'] 
             },
 
         /* Blog */
-        blog: {
+        blog_latest: {
             parents: ['global'],
             contentContainer: ['content.with.sidebar'],
             submenu: ['blog_submenu'],
@@ -175,18 +206,30 @@ fin.init({
         
         'salmon/api': 'salmon_api_fin',
         'salmon/api/finsort': 'salmon_api_finsort',
+        'salmon/api/init': 'salmon_api_init',
+        'salmon/api/dotnotation': 'salmon_api_dotnotation',
+
 
         /* Guppy */
         'guppy': 'guppy_start_intro',
+        'guppy/start/why': 'guppy_start_why',
+        'guppy/start/tools': 'guppy_start_tools',
+        'guppy/start/contribute': 'guppy_start_contribute',
 
         /* Fishtank */
         'fishtank': 'fishtank_start_intro',
+        'fishtank/start/why': 'fishtank_start_why',
+        'fishtank/start/tools': 'fishtank_start_tools',
+        'fishtank/start/contribute': 'fishtank_start_contribute',
 
         /* Aquatic */
         'aquatic': 'aquatic_start_intro',
+        'aquatic/start/why': 'aquatic_start_why',
+        'aquatic/start/tools': 'aquatic_start_tools',
+        'aquatic/start/contribute': 'aquatic_start_contribute',
 
         /* Blog */
-        'blog': 'blog'
+        'blog': 'blog_latest'
 
     },
     callbacks: { // events and callbacks to extend highfin
@@ -195,6 +238,7 @@ fin.init({
     default_page: 'home'
 })
 
+fin.meta.update = "Update: We'll be filling in the docs bit by bit over the next week, so check back in a few hours. [currently at 15%]"
 
 
 </script>

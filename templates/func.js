@@ -6,7 +6,7 @@ exports.configureApp = function() {
 	switch (path[0]) {
 		case 'salmon':
 			fin.meta.title = 'Salmon'
-			fin.meta.description = 'A thick-client javascript framework[fin] backed by a razor-thin node.js server[tail]'			
+			fin.meta.description = 'A thick-client javascript framework backed by a razor-thin node.js server'			
 			break;
 		case 'guppy':
 			fin.meta.title = 'Guppy'
@@ -58,10 +58,11 @@ var entityMap = {
     ">": "&gt;",
     '"': '&quot;',
     "'": '&#39;',
-    "/": '&#x2F;'
+    "/": '&#x2F;',
+    "\t": "    "
   };
 exports.escapeHtml = function(string) {
-    return String(string).replace(/[&<>"'\/]/g, function (s) {
+    return String(string).replace(/[&<>"'\/\t]/g, function (s) {
       return entityMap[s];
     });
   }

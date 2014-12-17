@@ -1,0 +1,29 @@
+<h1>Dot Notation</h1>
+<p>The core <code>fin()</code> function takes a <code>dot notation string</code> as a parameter. This is used throughout fin's methods to deal with objects. These dot notation strings are referred to as <code>dotPaths</code> or <code>dotStrings</code> and in some cases <code>dotReferences</code>. There are two key concepts to understand here.</p>
+<p>Say we had the following environment:</p>
+<pre class="prettyprint">
+<code>[[  print( fin.fn.escapeHtml(`
+fin.data = {
+	my: {
+		data: {
+			model: "works"
+		}
+	},
+	dot: {
+		ref: "_fin.data.my.data"
+	}
+}
+
+fin('fin.data.my.data.model').val // works
+
+fin('fin.data.dot.ref.model').val // works
+
+`) )
+	 ]]</code>
+</pre>
+
+<p>Here we have a simplified data model. The dot notation path defaults to properties off window. In this case <code>fin.data.m.data.model</code> maps <code>window.fin.data.my.data.model</code>.</p>
+<p>The fin function splits the dotPath into segments and iterates through each one as it follows the chain.</p>
+<p>In the second call to fin on the 4th iteration the value of <code>ref</code> is <code>_fin.data.my.data</code>. Because it's prefixed by an underscore it's interpreted by the fin function as a <code>dotReference</code> at which point it recursively follows that reference to <code>fin.data.my.data</code> before accessing <code>.model</code>.</p>
+
+<p>This is a very powerful idea. Among other things it allows you to flatten your data model almost like an RDBMS minimizing the amount of data sent from the server.</p>
