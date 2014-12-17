@@ -1,1 +1,50 @@
-fin
+<h1>The <code>fin</code> namespace</h1>
+<p>After including fin.js on the page it will ensure <code>window.fin exists</code>.</p> 
+
+<p>Initially fin only contains an init function which you typically call before the DOM is ready with a fin <a class="type" href="/#!/salmon/api/init">configuration</a> object.</p> 
+
+<pre class="prettyprint">
+<code>[[  print( fin.fn.escapeHtml(`
+// configure and init app
+fin.init({
+    containers: ['mainContainer'],
+    navigate: { 
+        // landing
+        home: {            
+            mainContainer: ['welcome'],            
+        }
+    },    
+    routes: { // a map of hashbang urls to navigate templates
+
+    },
+    callbacks: { // events and callbacks to extend highfin
+        
+    },
+    default_page: 'home'
+})
+`) ) ]]</code>
+</pre>
+
+<p>The init function will bootstrap the fin object with the configuration you passed in. Here's a summary of the methods and structures that are made available:</p>
+<pre class="prettyprint">
+<code>[[  print( fin.fn.escapeHtml(`
+log() // "safe" logging function
+Function.prototype.curry() // function currying that accepts named args
+
+fin = {
+    data: {},     // your app's data model
+    fin(),        // BDD style object filtering and sorting
+    settings: {}, // defaults + configuration object
+    log(),        // special logging functions for pretty console messages
+    extend(),     // extend objects by pushing to properties that are arrays
+    fn: {},       // your auto-namespaced functions from the /templates folder
+    _meta: {},    // fin's internal data storage location
+    meta: {},     // your app's storage location for things that aren't 'data'
+    nav(),        // navigate to a 'page'
+    fin.v: {},    // form validators and methods
+    render(),     // main template rendering function
+    pg: {},       // 3rd party plugins can extend fin with their own methods and properties
+}
+`) ) ]]</code>
+</pre>
+
