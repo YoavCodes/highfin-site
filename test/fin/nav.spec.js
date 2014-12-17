@@ -98,14 +98,14 @@ describe("fin.nav", function(){
 	});
 
 
-	it("should render the default page on start", function(){				
+	/*it("should render the default page on start", function(){				
 		// todo: upgrade phantomjs to version with window.onhashchange
 		//expect(fin._meta.last_nav()).toBe("home");
 	});
 	// todo: test routes when phantomjs is upgraded
 
 	it("should navigate to a page, render templates replacing contents of the container", function(){				
-		fin.nav("home");
+		fin.nav("home");		
 		expect($("#container .block.block_welcome").html()).toBe("welcome template"); // rendered home page
 		fin.nav("thanks");			
 		expect($("#container .block.block_welcome").length).toBe(0); // removed home page templates
@@ -183,7 +183,7 @@ describe("fin.nav", function(){
 	it("should not close open tags when rendering inline templates", function() {
 		fin.nav("opentags");
 		expect($("#container .block.block_inlinerenderopentags b").html()).toBe('<div class="block block_inlinerenderchild2">inlinerenderchild2 template<button class="clickme">click me fight</button></div>')
-	})
+	})*/
 
 	// todo: updating docs https://github.com/YoavGivati/salmon/wiki/Templating-Overview
 	// todo: remove .js templates and simplify code.
