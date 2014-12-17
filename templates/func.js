@@ -18,12 +18,16 @@ exports.configureApp = function() {
 			break;
 		case 'aquatic':
 			fin.meta.title = 'Aquatic'
-			fin.meta.description = 'Multi-server continuous deployment platform.'
+			fin.meta.description = 'Multi-server continuous deployment platform. Run your own PaaS.'
 			break;	
 		case 'blog':
 			fin.meta.title = 'Blog'
 			fin.meta.description = 'News and updates.'
 			break;		
+		default: 
+			fin.meta.title = ''
+			fin.meta.description = ''
+			break;
 	}
 }
 
@@ -47,4 +51,17 @@ exports.selectMenu = function() {
 	}
 }
 
-
+// from mustache
+var entityMap = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': '&quot;',
+    "'": '&#39;',
+    "/": '&#x2F;'
+  };
+exports.escapeHtml = function(string) {
+    return String(string).replace(/[&<>"'\/]/g, function (s) {
+      return entityMap[s];
+    });
+  }
