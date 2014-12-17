@@ -20,9 +20,9 @@ fin.init({
 
         global: {   
             require: ['func'],         
-            before_func: [ ['fin.fn.func.configureApp'] ],
+            before_func: [ ['fin.fn.configureApp'] ],
             container: ['page'],
-            after_func: [ ['fin.fn.func.selectMenu'] ]
+            after_func: [ ['fin.fn.selectMenu'], ['prettyPrint'] ]
         },
         home: {
             parents: ['global'],
