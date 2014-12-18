@@ -25,8 +25,8 @@ exports.configureApp = function() {
 			fin.meta.description = 'News and updates.'
 			break;		
 		default: 
-			fin.meta.title = ''
-			fin.meta.description = ''
+			fin.meta.title = 'Swim with the Big fish'
+			fin.meta.description = 'Tools and services to Design, Develop, and Ship your tech startup'
 			break;
 	}
 }
