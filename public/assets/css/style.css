@@ -278,7 +278,7 @@ a {
   color: #316281;
   font-size: 50px;
   font-weight: bold;
-  font-family: arial black;
+  font-family: "Arial Black", Arial;
   text-align: center;
 }
 #doc_header .title.stroke {
@@ -361,7 +361,7 @@ a {
 #content h1 {
   font-size: 33px;
   margin: -11px -5px 0px;
-  font-family: Arial black;
+  font-family: "Arial Black", Arial;
   color: #eee;
 }
 #content h2 {
