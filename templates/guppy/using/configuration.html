@@ -1,0 +1,65 @@
+<h1>-.json Configuration Files</h1>
+<p>Here is a contrived <code>-.json</code> file. It's actually the <code>-.json</code> configuration for <code>squid</code> and <code>shark</code> from Aquatic, and a basic <code>salmon.js</code> app.</p>
+<pre class="prettyprint">
+<code>[[  print( fin.fn.escapeHtml(`
+{
+	squid: {
+		"exec": [{
+			"lang": "golang",
+			"version": "1.2.1",
+			"main": "code.highf.in/chalkhq/squid",
+			"watch": ["./go/src/code.highf.in/chalkhq/squid", "./go/src/code.highf.in/chalkhq/shared"],
+		}]
+	},
+
+	shark: {
+		"exec": [{
+			"lang": "golang",
+			"version": "1.2.1",
+			"main": "code.highf.in/chalkhq/shark",
+			"watch": ["./go/src/code.highf.in/chalkhq/shark"],
+		}]
+	},
+	web: {
+		"type": "http",
+		"exec": [{
+			"lang": "nodejs",
+			"version": "0.10.28",
+			"main": "./salmon.js",
+			"watch": ["./"],
+			"exclude": ["./.git", "./node/_SpecRunner.html", "./node/node_modules", "./libs/node_modules"],
+			"less": [ {"from": "./public/assets/less", "to": "./public/assets/css", "min": false} ],
+			"jasmine": {"frontend": "./test/fin", "backend": "./test/tail"},
+			"cachecontrol": ["./public", "./template"],			
+			"npm": ["./node", "./libs"],
+			"endpoints": [{"path":"/0", "port": "8080"}]			
+		}],
+		"static": [{"path": "/", "dir": "./public"}], 
+		"domains": {"app1.test": []},
+		"instances": ["5000", "5001"],
+		"balances": [{"6000": "0:1"}]
+	}
+}
+`) ) ]]</code>
+</pre>
+
+<p>In the case of the squid and shark configurations, they're both Go apps using go version 1.2.1. The <code>main</code> option here points to their go import path, which is the folder path from your GOPATH/src/ folder. Each app has one exec. An exec is some executable, could be a binary, a node.js app or a go app. We've specified watch folders to monitor for changes.</p>
+
+<p>The <code>web</code> app configuration is for a salmon app.</p>
+<p>type = <code>http</code> tells <code>squid</code> in an Aquatic infrastructure to route traffic over http to the docker container running your execs. You could also specify <code>tcp</code> or <code>udp</code></p>
+
+<p>Skipping over the exec block for now we have <code>static</code> which configures <code>jellyfish</code> in an Aquatic setup to serve and cache in ram folders of static files and map those folders to url paths. While salmon apps have their own built in static-file server you may want to keep node.js focusing on application level processing and let <code>jellyfish</code> worry about static files. On a <code>fishtank</code> server nginx is used for static file serving.</p>
+
+<p>The <code>domains</code> block tells <code>squid</code> to reverse-proxy queries for a domain name on an array of ports to your app's instances.</p>
+
+<p>The <code>instances</code> block is an array of ports and is used for private networking between your app instances. ie: between docker containers. If you set a value of 5000, then one instance will be accessible from any app in a deploy via 127.0.0.1:5000. The two instances may be physically deployed on separate machines in our infrastructure, but will still be able to tunnel to each-other via this mechanism. If you set a value of [5000, 5001], then you will have two separate instances each accessible directly via 127.0.0.1:5000 and 127.0.0.1:5001 respectively</p>
+
+<p>The <code>balances</code> block compliments instances. There are cases where you may want to specify an ip address for round-robbining through several instance ranges. So ["0:1"] specifies a range of instance 0 to 1 in the zero-indexed array specified in the instances block. A value of ["2:5"] specifies index 2-5 ie: the third to the sixth entry. To allow for real-time scaling of your app once in production a value of [":"] specifies all instances, ["2:"] specifies instances 2 and up and so on.</p>
+
+<p>Back to the exec block. Unlike in the Go apps, the <code>main</code> property of a node app points to the .js file to run with node. We're using <code>watch</code> with <code>exclude</code> to monitor the entire project folder excluding some paths for changes.</p>
+
+<p>The <code>less</code> and <code>jasmine</code> blocks define paths for running LESS compilation when a less file changes, and configuration for running Jasmine unit tests for the front-end using PhantomJS and backend.</p>
+
+<p>The <code>npm</code> block lists folders with package.json files. <code>guppy npm install</code> will install all your npm dependencies with the specified version of node.js</p>
+
+<p>And finally the <code>endpoints</code> block specifies routing a path to a specific port used by both <code>Fishtank</code> and <code>Jellyfish</code> to route traffic to the port that node.js will be listening on.</p>

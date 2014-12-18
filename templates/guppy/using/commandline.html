@@ -1,0 +1,9 @@
+<h1>Guppy CLI</h1>
+<p>Guppy compiles to a single binary. Put it somewhere on your PATH.</p>
+<p>Run <code>guppy run</code> from any folder and it'll recurse up to parent directories until it finds a <code>-.json</code>file. If you have multiple apps and/or execs the <code>guppy run</code> command will launch all of them. You can optionally specify an app by name <code>guppy run app1</code></p>
+
+<p><code>guppy run</code> will monitor files and folders specified in your <code>-.json</code> for changes. Designed to work with Go and Node.js apps it can run <code>go install</code> for you, compile LESS, run jasmine tests for back-end or front-end using PhantomJS</p>
+
+<p>Guppy can manage and generate ssh keys for your project. Run npm install and run node apps for multiple versions of node.js existing on the same server. And has shortcuts to <code>git commit</code> and <code>git push</code> your code which ties into <a href="/#!/fishtank">Fishtank</a> and <a href="/#!/aquatic">Aquatic</a></p>
+
+<p>While Guppy can run on your typical Debian or Ubuntu server just fine, it's best to run it in a <a href="https://github.com/YoavGivati/fry-box">fry-box</a>. A fry-box is just a <a href="http://vagrantup">vagrant</a> basebox where the GOPATH and other variables have been configured already and guppy is ready to use.</p>

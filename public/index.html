@@ -120,18 +120,34 @@ fin.init({
                 parents: ['guppy'],
                 sidebar: ['guppy_start_sidebar']
             },
-            guppy_start_intro: {
-                parents: ['guppy_start'],
-                content: ['guppy_start_intro'] 
+                guppy_start_intro: {
+                    parents: ['guppy_start'],
+                    content: ['guppy_start_intro'] 
+                },
+                guppy_start_why: {
+                    parents: ['guppy_start'],
+                    content: ['guppy_start_why'] 
+                },
+                guppy_start_contribute: {
+                    parents: ['guppy_start'],
+                    content: ['guppy_start_contribute'] 
+                },
+            guppy_using: {   
+                parents: ['guppy'],
+                sidebar: ['guppy_using_sidebar']           
             },
-            guppy_start_why: {
-                parents: ['guppy_start'],
-                content: ['guppy_start_why'] 
-            },
-            guppy_start_contribute: {
-                parents: ['guppy_start'],
-                content: ['guppy_start_contribute'] 
-            },
+                guppy_using_commandline: {
+                    parents: ['guppy_using'],
+                    content: ['guppy_using_commandline'] 
+                },
+                guppy_using_configuration: {
+                    parents: ['guppy_using'],
+                    content: ['guppy_using_configuration'] 
+                },
+                guppy_using_vagrant: {
+                    parents: ['guppy_using'],
+                    content: ['guppy_using_vagrant'] 
+                },
 
         /* Fishtank */
         fishtank: {
@@ -143,18 +159,34 @@ fin.init({
                 parents: ['fishtank'],
                 sidebar: ['fishtank_start_sidebar']
             },
-            fishtank_start_intro: {
-                parents: ['fishtank_start'],
-                content: ['fishtank_start_intro'] 
+                fishtank_start_intro: {
+                    parents: ['fishtank_start'],
+                    content: ['fishtank_start_intro'] 
+                },
+                fishtank_start_why: {
+                    parents: ['fishtank_start'],
+                    content: ['fishtank_start_why'] 
+                },
+                fishtank_start_contribute: {
+                    parents: ['fishtank_start'],
+                    content: ['fishtank_start_contribute'] 
+                },
+            fishtank_using: {   
+                parents: ['fishtank'],
+                sidebar: ['fishtank_using_sidebar']           
             },
-            fishtank_start_why: {
-                parents: ['fishtank_start'],
-                content: ['fishtank_start_why'] 
-            },
-            fishtank_start_contribute: {
-                parents: ['fishtank_start'],
-                content: ['fishtank_start_contribute'] 
-            },
+                fishtank_using_commandline: {
+                    parents: ['fishtank_using'],
+                    content: ['fishtank_using_commandline'] 
+                },
+                fishtank_using_configuration: {
+                    parents: ['fishtank_using'],
+                    content: ['fishtank_using_configuration'] 
+                },
+                fishtank_using_vagrant: {
+                    parents: ['fishtank_using'],
+                    content: ['fishtank_using_vagrant'] 
+                },
 
         /* Aquatic */
         aquatic: {
@@ -166,18 +198,34 @@ fin.init({
                 parents: ['aquatic'],
                 sidebar: ['aquatic_start_sidebar']
             },
-            aquatic_start_intro: {
-                parents: ['aquatic_start'],
-                content: ['aquatic_start_intro'] 
+                aquatic_start_intro: {
+                    parents: ['aquatic_start'],
+                    content: ['aquatic_start_intro'] 
+                },
+                aquatic_start_why: {
+                    parents: ['aquatic_start'],
+                    content: ['aquatic_start_why'] 
+                },
+                aquatic_start_contribute: {
+                    parents: ['aquatic_start'],
+                    content: ['aquatic_start_contribute'] 
+                },
+            aquatic_using: {   
+                parents: ['aquatic'],
+                sidebar: ['aquatic_using_sidebar']           
             },
-            aquatic_start_why: {
-                parents: ['aquatic_start'],
-                content: ['aquatic_start_why'] 
-            },
-            aquatic_start_contribute: {
-                parents: ['aquatic_start'],
-                content: ['aquatic_start_contribute'] 
-            },
+                aquatic_using_commandline: {
+                    parents: ['aquatic_using'],
+                    content: ['aquatic_using_commandline'] 
+                },
+                aquatic_using_configuration: {
+                    parents: ['aquatic_using'],
+                    content: ['aquatic_using_configuration'] 
+                },
+                aquatic_using_vagrant: {
+                    parents: ['aquatic_using'],
+                    content: ['aquatic_using_vagrant'] 
+                },
 
         /* Blog */
         blog_latest: {
@@ -216,17 +264,29 @@ fin.init({
         'guppy/start/tools': 'guppy_start_tools',
         'guppy/start/contribute': 'guppy_start_contribute',
 
+        'guppy/using': 'guppy_using_commandline',
+        'guppy/using/configuration': 'guppy_using_configuration',
+        'guppy/using/vagrant': 'guppy_using_vagrant',
+
         /* Fishtank */
         'fishtank': 'fishtank_start_intro',
         'fishtank/start/why': 'fishtank_start_why',
         'fishtank/start/tools': 'fishtank_start_tools',
         'fishtank/start/contribute': 'fishtank_start_contribute',
 
+        'fishtank/using': 'fishtank_using_commandline',
+        'fishtank/using/configuration': 'fishtank_using_configuration',
+        'fishtank/using/vagrant': 'fishtank_using_vagrant',
+
         /* Aquatic */
         'aquatic': 'aquatic_start_intro',
         'aquatic/start/why': 'aquatic_start_why',
         'aquatic/start/tools': 'aquatic_start_tools',
         'aquatic/start/contribute': 'aquatic_start_contribute',
+
+        'aquatic/using': 'aquatic_using_commandline',
+        'aquatic/using/configuration': 'aquatic_using_configuration',
+        'aquatic/using/vagrant': 'aquatic_using_vagrant',
 
         /* Blog */
         'blog': 'blog_latest'
@@ -238,7 +298,7 @@ fin.init({
     default_page: 'home'
 })
 
-fin.meta.update = "Update: We'll be filling in the docs bit by bit over the next week, so check back in a few hours. [currently at 15%]"
+fin.meta.update = "Update: We'll be filling in the docs bit by bit over the next week, so check back in a few hours. [currently at 20%]"
 
 
 </script>
