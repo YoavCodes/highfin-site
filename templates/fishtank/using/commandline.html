@@ -1,1 +1,8 @@
-templates
+<h1>Command Line Usage</h1>
+<p><code>fishtank install</code> - will copy itself to /usr/bin, ensure nginx and git are installed, install a default site and all the necessary files and folders fishtank needs to work.</p>
+<p><code>fishtank uninstall</code> - will remove the nginx configuration for itself, delete any projects, and any other traces of fishtank.</p>
+<p><code>fishtank add</code> - adds a new project. Will prompt you for a project name, branch to monitor for deploys, and the public key you want to use. It will create a new bare git repo for your project with the branch you specified with a welcome page, and configure permissions so that only your ssh key can access it the repo.</p>
+<p><code>fishtank remove</code> - will remove all traces of a project</p>
+<p><code>git push</code>Once fishtank is installed and running, and you've added a project you can clone the project locally and start coding, or add your server as a remote for an existing local repo, then do a pull, merge (into your deploy branch) and push to deploy your code.</p>
+<p>If your VPS IP address is <code>123.123.123.123</code>, and your project is <code>testproject.com</code> your git remote url will be <code>ssh://testproject.com/123.123.123.123/~/code.git</code></p>
+

@@ -1,0 +1,8 @@
+<h1>Vagrant</h1>
+<p>The <a href="http://github.com/YoavGivati/highfin">HighFin</a> GitHub repository has a Vagrantfile configured to setup and run multiple VMs locally.</p>
+<p>Assuming you have <a href="https://www.vagrantup.com/">Vagrant</a> and <a href="https://www.virtualbox.org/">Virtualbox</a> installed on your system, just clone <a href="http://github.com/YoavGivati/highfin">HighFin</a>, cd into the folder and run the following commands.</p>
+<p><code>vagrant up octopus</code> - will create a new VM and configure it to run octopus</p>
+<p><code>vagrant ssh octopus</code> - will ssh into your octopus VM</p>
+<p><code>guppy run octopus</code> - will actually run the octopus server inside the VM re-install/re-run octopus on changes to the octopus source code.</p>
+<p>repeat those steps in new terminal windows for <code>squid</code>, <code>shark0</code>, <code>shark1</code>, and <code>guppy</code>.</p>
+<p>The guppy task runner is currently required to create new projects on octopus, it also handles pushing for continuous deploys and at dev time. If you already have a project in a fry-box you can use that guppy to configure your project to push to your local octopus instead of spinning up the guppy vagrant VM suggested above.</p>

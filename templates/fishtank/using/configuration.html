@@ -1,5 +1,6 @@
 <h1>-.json Configuration Files</h1>
-<p>Here is a contrived <code>-.json</code> file. It's actually the <code>-.json</code> configuration for <code>squid</code> and <code>shark</code> from Aquatic, and a basic <code>salmon.js</code> app.</p>
+<p>Fishtank will deploy your code based on the configuration in your project's <code>-.json</code> file.</p>
+<p>Here are the <code>-.json</code> configurations for <code>squid</code> and <code>shark</code> from Aquatic, and a basic <code>salmon.js</code> app.</p>
 <pre class="prettyprint">
 <code>[[  print( fin.fn.escapeHtml(`
 {
@@ -19,7 +20,17 @@
 			"main": "code.highf.in/chalkhq/shark",
 			"watch": ["./go/src/code.highf.in/chalkhq/shark"],
 		}]
-	},
+	}
+}
+`) ) ]]</code>
+</pre>
+
+
+<p>In the case of the squid and shark configurations, they're both Go apps using go version 1.2.1. The <code>main</code> option here points to their go import path, which is the folder path from your GOPATH/src/ folder. Each app has one exec. An exec is some executable, could be a binary, a node.js app or a go app. We've specified watch folders to monitor for changes.</p>
+
+<pre class="prettyprint">
+<code>[[  print( fin.fn.escapeHtml(`
+{
 	web: {
 		"type": "http",
 		"exec": [{
@@ -42,9 +53,6 @@
 }
 `) ) ]]</code>
 </pre>
-
-<p>In the case of the squid and shark configurations, they're both Go apps using go version 1.2.1. The <code>main</code> option here points to their go import path, which is the folder path from your GOPATH/src/ folder. Each app has one exec. An exec is some executable, could be a binary, a node.js app or a go app. We've specified watch folders to monitor for changes.</p>
-
 <p>The <code>web</code> app configuration is for a salmon app.</p>
 <p>type = <code>http</code> tells <code>squid</code> in an Aquatic infrastructure to route traffic over http to the docker container running your execs. You could also specify <code>tcp</code> or <code>udp</code></p>
 
