@@ -57,7 +57,7 @@ fin('fin.data.blog.posts.1.title').set('My First Edited Title');
 
 
 <h3>Deleting a property</h3>
-<p><code>remove()</code> allows you to delete the property for and object traversed to in <code>fin()</code> or <code>find()</code> calls.</p>
+<p><code>remove()</code> allows you to delete the property for an object traversed to in <code>fin()</code> or <code>find()</code> calls.</p>
 <div class="signature"><span class="fn">remove( <span class="parameter">follow_dotkeys</span> )</span> <span class="returns">Returns: <a class="type" href="">undefined</a></span>    
     <div class="params">
         <div class="param"><span class="parameter">follow_dotkeys</span> : <a class="type">Boolean</a></div>
@@ -76,7 +76,7 @@ fin('fin.data.blog.posts.1').remove(); // will delete blog post one
 
 <h2>Sorting the children/results of a findings object</h2>
 <h3>Executing a query with <code>sort()</code></h3>
-<p>Once you've build up your query with one or more filters (read on to see how to do that), you execute it by calling the <code>sort()</code> method. It will return a sorted array of children. By default it will sort by relevance.</p>
+<p>Once you've built up your query with one or more filters (read on to see how to do that), you execute it by calling the <code>sort()</code> method. It will return a sorted array of children. By default it will sort by relevance.</p>
 <div class="signature"><span class="fn">sort( <span class="parameter">sort_method</span> )</span> <span class="returns">Returns: <a class="type" href="">undefined</a></span>    
     <div class="params">
         <div class="param"><span class="parameter">sort_method</span> : <a class="type">Function</a></div>
@@ -175,14 +175,14 @@ fin('fin.data.blog.posts').where('content').contains('javascript').sort(); // re
 </pre>
 
 <h2>Custom Filters</h2>
-<p>You can specify your own custom filters if the build-in filters aren't enough for your needs using <code>compare()</code></p>
+<p>You can specify your own custom filters if the built-in filters aren't enough for your needs using <code>compare()</code></p>
 <div class="signature"><span class="fn">compare( <span class="parameter">value</span>, <span class="parameter">fn</span> )</span> <span class="returns">Returns: <a class="type" href="">findings</a></span>   
 	<div class="description">Will check a property's value against <span class="parameter">value</span> using a custom filter method passed into <span class="parameter">fn</span>.</div>
     <div class="params">
         <div class="param"><span class="parameter">value</span> : <a class="type">Any Type</a></div>
         <div class="description">If a string is passed in it will be converted to a regular expression to find occurances of that string.</div> 
         <div class="param"><span class="parameter">fn</span> : <a class="type">Function</a></div>
-        <div class="description">If a string is passed in it will be converted to a regular expression to find occurances of that string.</div>       
+        <div class="description">A custom filter method.</div>       
     </div>
 </div>
 <pre class="prettyprint">
