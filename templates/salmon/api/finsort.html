@@ -185,6 +185,7 @@ fin('fin.data.blog.posts').where('content').contains('javascript').sort(); // re
         <div class="description">A custom filter method.</div>       
     </div>
 </div>
+<p>Custom filter methods must follow a defined wrapper pattern, see below for an example. The custom filter part is defined as <code>f.method</code> and must return either false (for non-matches) or an integer (for the relevance of the match). note: the final computed relevance used in <code>sort()</code> for a match will be a sum of all the matched filters for that result.</p>
 <pre class="prettyprint">
 <code><h4>Example:</h4>[[  print( fin.fn.escapeHtml(`
 function customEqualityFilter(value) {
