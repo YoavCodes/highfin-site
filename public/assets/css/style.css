@@ -367,11 +367,15 @@ a {
 }
 #content h2 {
   font-size: 22px;
-  margin-bottom: 5px;
+  margin: 14px 0 5px;
+  font-weight: bold;
 }
 #content h3 {
   font-size: 17px;
   font-weight: bold;
+  border-top: 4px dashed #010b11;
+  padding-top: 6px;
+  margin-top: 16px;
 }
 #content p {
   margin: 10px 0;
@@ -390,7 +394,7 @@ a {
   background: #000;
   padding: 10px 20px;
   border: 7px solid #051e2d;
-  margin: 17px -34px 0 -22px;
+  margin: 17px -34px 17px -22px;
   border-right-color: #000;
   border-radius: 10px 0 0 10px;
   border-left: none;
@@ -489,7 +493,7 @@ code.prettyprint {
   border-radius: 8px;
 }
 pre.prettyprint {
-  margin: 1px auto;
+  margin: 1px auto 10px;
   padding: 0 5px;
   white-space: pre-wrap;
   font-size: 85%;

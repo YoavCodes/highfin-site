@@ -1,6 +1,8 @@
 <h1><code>fin().sort()</code> BDD style object filtering</h1>
+<p>The core <code>fin()</code> function takes a dot notation string and returns a <a class="type">findings</a> object, which then allows chaining various modifying methods to alter the returned object, and filtering methods to fetch a set of the children of the object specified in the dot notation string. To actually retrieve the results use the <code>sort()</code> method at the end of the chain.</p>
+
 <div class="signature"><span class="fn">fin( <span class="parameter">obj_path</span>, <span class="parameter">object</span> )</span> <span class="returns">Returns: <a class="type" href="">findings</a></span>
-    <div class="description">BDD style object filtering, sorting, and modifying.</div>
+    <div class="description">BDD style object filtering, modifying, and sorting.</div>
     <div class="params">
         <div class="param"><span class="parameter">obj_path</span> : <a class="type" href="/#!/salmon/api/dotstring">dotString</a></div>
         <div class="description">A dot notation string.</div>
@@ -8,3 +10,197 @@
         <div class="description">obj_path is relative to this object. If none is provided window will be assumed.</div>
     </div>
 </div>
+
+<h2>Modifying the findings object</h2>
+<p>One use-case for the <code>fin()</code> function is to modify a property at a given dotPath.</p>
+
+
+<h3>Getting a property of an object</h3>
+<p><code>find()</code> is a modifying method used to traverse deeper into an object, refining the original call to <code>fin()</code>. Useful in some situations to get, set, or remove a specific property or child of an object.</p>
+
+<div class="signature"><span class="fn">find( <span class="parameter">dot_path</span> )</span> <span class="returns">Returns: <a class="type" href="">findings</a></span>
+    <div class="description">Traverse deeper into an object.</div>
+    <div class="params">
+        <div class="param"><span class="parameter">dot_path</span> : <a class="type" href="/#!/salmon/api/dotstring">dotString</a></div>
+        <div class="description">A dot notation string relative to the path specified in fin().</div>       
+    </div>
+</div>
+
+<pre class="prettyprint">
+<code><h4>Example:</h4>[[  print( fin.fn.escapeHtml(`
+fin('fin.data.blog.posts.1').find('title').val; // My First Blog Post
+`) )
+]]</code>
+</pre>
+
+
+<h3>Setting the value of a property</h3>
+<p><code>set()</code> allows you to change the value for the property at the path traversed to in <code>fin()</code> or <code>find()</code> calls.</p>
+<div class="signature"><span class="fn">set( <span class="parameter">new_value</span>, <span class="parameter">follow_dotkeys</span> )</span> <span class="returns">Returns: <a class="type" href="">findings</a></span>
+    <div class="description">Traverse deeper into an object.</div>
+    <div class="params">
+        <div class="param"><span class="parameter">new_value</span> : <a class="type">Any Type</a></div>
+        <div class="description">The value to set</div>       
+    </div>
+    <div class="params">
+        <div class="param"><span class="parameter">follow_dotkeys</span> : <a class="type">Boolean</a></div>
+        <div class="description">+If the value of the last node in the obj_path is a dotReference, <code>true</code> will follow those last-node dotReferences setting the value at the end of that lookup chain. If set to <code>false</code> it will instead set the property at the literal location of the specified obj_path to <code>new_value</code>, useful for changing a dotReference to point to something else or to a value of some other type.</div>       
+    </div>
+</div>
+
+<pre class="prettyprint">
+<code><h4>Example:</h4>[[  print( fin.fn.escapeHtml(`
+fin('fin.data.blog.posts.1.title').set('My First Edited Title');
+`) )
+]]</code>
+</pre>
+
+
+<h3>Deleting a property</h3>
+<p><code>remove()</code> allows you to delete the property for and object traversed to in <code>fin()</code> or <code>find()</code> calls.</p>
+<div class="signature"><span class="fn">remove( <span class="parameter">follow_dotkeys</span> )</span> <span class="returns">Returns: <a class="type" href="">undefined</a></span>    
+    <div class="params">
+        <div class="param"><span class="parameter">follow_dotkeys</span> : <a class="type">Boolean</a></div>
+        <div class="description">If the value of the last node in the obj_path is a dotReference, <code>true</code> will follow those last-node dotReferences and delete the property at the end of that lookup chain, then cycle back up the lookup chain changing each dotReference followed to an empty string. If set to <code>false</code> it will instead delete the property at the literal location of the specified obj_path, useful for deleting a property who's value is a dotReference.</div>       
+    </div>
+</div>
+
+<pre class="prettyprint">
+<code><h4>Example:</h4>[[  print( fin.fn.escapeHtml(`
+fin('fin.data.blog.posts.1').remove(); // will delete blog post one
+`) )
+]]</code>
+</pre>
+
+
+
+<h2>Sorting the children/results of a findings object</h2>
+<h3>Executing a query with <code>sort()</code></h3>
+<p>Once you've build up your query with one or more filters (read on to see how to do that), you execute it by calling the <code>sort()</code> method. It will return a sorted array of children. By default it will sort by relevance.</p>
+<div class="signature"><span class="fn">sort( <span class="parameter">sort_method</span> )</span> <span class="returns">Returns: <a class="type" href="">undefined</a></span>    
+    <div class="params">
+        <div class="param"><span class="parameter">sort_method</span> : <a class="type">Function</a></div>
+        <div class="description">A custom Array.sort function. The <code>sort()</code> method will always attempt to sort results by relevance. If a custom <span class="parameter">sort_method</span> is passed in it will use it as a primary sort, and relevance as a secondary sort.</div>       
+    </div>
+</div>
+<pre class="prettyprint">
+<code><h4>Example:</h4>[[  print( fin.fn.escapeHtml(`
+fin('fin.data.blog.posts').sort(function(a, b){ return a.num_comments - b.num_comments }) // retuns an array of blog posts sorted by number of comments, with a secondary sort based on relevance, which in this case as there are no filters the computed relevance for each result will be the same, and ironically, irrelevant.
+`) )
+]]</code>
+</pre>
+
+<h2>Building Queries</h2>
+<p>You can combine multiple filters building up complex 'and/or' queries that compare specified properties of children against values.</p>
+
+<h3>Creating a filter</h3>
+<p><code>where()</code> is the way you start building the filter query. It accepts a dotPath relative to a child of the object traversed to using the <code>fin()</code> or <code>find()</code> methods.</p>
+<div class="signature"><span class="fn">where( <span class="parameter">filterPath</span> )</span> <span class="returns">Returns: <a class="type" href="">findings</a></span>    
+    <div class="params">
+        <div class="param"><span class="parameter">filterPath</span> : <a class="type" href="/#!/salmon/api/dotstring">dotString</a></div>
+        <div class="description">The property of the children to compare for the filter</div>       
+    </div>
+</div>
+
+<p><code>is()</code> is a filter method that accepts any value, it will compare <span class="parameter">value</span> with the value of the property specified in a <code>where()</code> call for strict equality.</p>
+<div class="signature"><span class="fn">is( <span class="parameter">value</span> )</span> <span class="returns">Returns: <a class="type" href="">findings</a></span> 
+<div class="description">Will compare a property's value against <span class="parameter">value</span> for strict equality.</div>   
+    <div class="params">
+        <div class="param"><span class="parameter">value</span> : <a class="type">Any Type</a></div>
+        <div class="description">The value to compare against.</div>       
+    </div>
+</div>
+
+<pre class="prettyprint">
+<code><h4>Example:</h4>[[  print( fin.fn.escapeHtml(`
+fin('fin.data.blog.posts').where('title').is('My First Blog Post').sort()[0]; // retuns the blog post object where title === "My first Blog Post"
+`) )
+]]</code>
+</pre>
+
+<p><code>and()</code> and <code>or()</code>are aliases for <code>where()</code> that create new filters as conditionally "and" or "or" in relation to the previous filter declared. You can chain as many filters as you like building up a complex query.</p>
+<p>note: Filters are not executed until you call <code>sort()</code></p>
+<div class="signature"><span class="fn">and( <span class="parameter">filterPath</span> )</span> <span class="returns">Returns: <a class="type" href="">findings</a></span>    
+    <div class="params">
+        <div class="param"><span class="parameter">filterPath</span> : <a class="type" href="/#!/salmon/api/dotstring">dotString</a></div>
+        <div class="description">The property of the children to compare for the filter</div>       
+    </div>
+</div>
+
+<div class="signature"><span class="fn">or( <span class="parameter">filterPath</span> )</span> <span class="returns">Returns: <a class="type" href="">findings</a></span>    
+    <div class="params">
+        <div class="param"><span class="parameter">filterPath</span> : <a class="type" href="/#!/salmon/api/dotstring">dotString</a></div>
+        <div class="description">The property of the children to compare for the filter</div>       
+    </div>
+</div>
+
+<pre class="prettyprint">
+<code><h4>Example:</h4>[[  print( fin.fn.escapeHtml(`
+fin('fin.data.blog.posts').where('author').is('Yoav').and('category').is('news')
+							 .or('author').is('Yoav').and('category').is('code').sort(); 
+// retuns an array of blog post objects where author is Yoav and categories are either code, or news
+`) )
+]]</code>
+</pre>
+
+<h2>Built-in Filters</h2>
+<p>We've already covered the <code>is()</code> filter for checking strict equality to a given value. Here are some more:</p>
+
+<div class="signature"><span class="fn">truthyFalsey( <span class="parameter">value</span> )</span> <span class="returns">Returns: <a class="type" href="">findings</a></span>    
+	<div class="description">Will compare a property's value against <span class="parameter">value</span> for strict equality and then 'regular' equality, giving strict equality matches higher computed relevance.</div>
+    <div class="params">
+        <div class="param"><span class="parameter">value</span> : <a class="type">Any Type</a></div>
+        <div class="description">The value to compare against</div>       
+    </div>
+</div>
+<pre class="prettyprint">
+<code><h4>Example:</h4><p>// assuming you're using 0 and 1 as values for published</p>[[  print( fin.fn.escapeHtml(`
+fin('fin.data.blog.posts').where('published').truthyFalsey(true).sort(); // retuns an array of published posts
+`) )
+]]</code>
+</pre>
+
+<div class="signature"><span class="fn">contains( <span class="parameter">value</span> )</span> <span class="returns">Returns: <a class="type" href="">findings</a></span>   
+	<div class="description">Will check a property's value for matches against a regular expression. The more matches, the higher computed relevance.</div>
+    <div class="params">
+        <div class="param"><span class="parameter">value</span> : <a class="type">RegExp, String</a></div>
+        <div class="description">If a string is passed in it will be converted into a regular expression that matches occurances of that string.</div>       
+    </div>
+</div>
+<pre class="prettyprint">
+<code><h4>Example:</h4>[[  print( fin.fn.escapeHtml(`
+fin('fin.data.blog.posts').where('content').contains('javascript').sort(); // retuns an array of posts where the word 'javascript' is used in the article, sorted by the number of times it's used.
+`) )
+]]</code>
+</pre>
+
+<h2>Custom Filters</h2>
+<p>You can specify your own custom filters if the build-in filters aren't enough for your needs using <code>compare()</code></p>
+<div class="signature"><span class="fn">compare( <span class="parameter">value</span>, <span class="parameter">fn</span> )</span> <span class="returns">Returns: <a class="type" href="">findings</a></span>   
+	<div class="description">Will check a property's value against <span class="parameter">value</span> using a custom filter method passed into <span class="parameter">fn</span>.</div>
+    <div class="params">
+        <div class="param"><span class="parameter">value</span> : <a class="type">Any Type</a></div>
+        <div class="description">If a string is passed in it will be converted to a regular expression to find occurances of that string.</div> 
+        <div class="param"><span class="parameter">fn</span> : <a class="type">Function</a></div>
+        <div class="description">If a string is passed in it will be converted to a regular expression to find occurances of that string.</div>       
+    </div>
+</div>
+<pre class="prettyprint">
+<code><h4>Example:</h4>[[  print( fin.fn.escapeHtml(`
+function customEqualityFilter(value) {
+	var f = this.filters[this.current_filter.or][this.current_filter.and];
+	f.val = value;
+	f.method = function(prop, val) {
+		if(prop === val) {
+			return 1
+		} else {
+			return false
+		}
+	}
+	return this
+}
+
+fin('fin.data.blog.posts').where('author').compare('Yoav', customEqualityFilter).sort(); // retuns an array of posts written by Yoav using a custom filter method.
+`) )
+]]</code>
+</pre>

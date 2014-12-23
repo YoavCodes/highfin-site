@@ -78,6 +78,7 @@ fin.init({
 </pre>
 <h3>Require</h3>
 <p>In the example above we've added another page <code>global</code>. The global page has a <code>require</code> line which tells fin to make sure it's loaded the template at <code>/templates/func.js</code> before navigating to the global page. The func.js template contains an exported function called <code>test()</code> which is autonamespaced to <code>fin.fn.test</code>.</p>
+<p>You can also use the require array to pre-load html templates used by pages the user is likely to navigate to next, speeding up your app.</p>
 
 <h3>Before_func and After_func</h3>
 <p>The <code>global</code> page also has <code>before_func</code> and <code>after_func</code> properties. These are arrays of arrays listing <a href="/#!/salmon/api/dotnotation">dotNotation</a> paths to functions and a named args object that's used with <a href="/#!/salmon/api/curry"><code>Function.prototype.curry()</code></a> to call each function before or after the page has been rendered.</p>
