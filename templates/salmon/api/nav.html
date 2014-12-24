@@ -1,0 +1,29 @@
+<h1>Navigation and Routing</h1>
+<p>Pages are defined in the <a class="type" href="/#!/salmon/api/init">configuration</a> object passed into <code>fin.init()</code>. The <code>navigate</code> property essentially lists pages, which are defined by listing the templates to load into each container, the templates and namespaced functions to preload, and which functions to automatically execute on navigating to the page before and after the templates are rendered.</p>
+
+<p>Routes are also defined in the <a class="type" href="/#!/salmon/api/init">configuration</a> object. The <code>routes</code> property is a mapping of hashbang url fragments, in the format /#!/, to pages. When visiting a hashbang url, fin will recursively check for matching routes toward a blank url if none are found it will default to the <code>default_page</code> also defined in your initial configuration.</p>
+
+<div class="signature"><span class="fn">nav( <span class="parameter">key</span> )</span> <span class="returns">Returns: <a class="type" href="">undefined</a></span>   
+	<div class="description">Navigates to the page specified by <span class="parameter">key</span>.</div>
+    <div class="params">
+        <div class="param"><span class="parameter">key</span> : <a class="type">String</a></div>
+        <div class="description">The page defined in the <a class="type" href="/#!/salmon/api/init">configuration</a> object.</div>      
+    </div>
+</div>
+
+<p>After you navigate to a page you'll be able to access the <span class="parameter">key</span> for the last page visited using the <code>last_nav()</code> method.</p>
+<p>note: While internally it's used as a setter, you'll most likely only ever use it as a getter.</p>
+
+<div class="signature"><span class="fn">fin._meta.last_nav( <span class="parameter">key</span> )</span> <span class="returns">Returns: <a class="type" href="">String</a></span>   
+	<div class="description">Sets or Gets the last page navigated to.</div>
+    <div class="params">
+        <div class="param"><span class="parameter">key</span> : <a class="type">String</a></div>
+        <div class="description">The key for the page.</div>      
+    </div>
+</div>
+
+<p>Under the hood <code>last_nav()</code> actually keeps track of every page navigated to. While users can use your browser's back button for pages associated with a hashbang route, for pages that aren't accociated with a route you can use the <code>go_back()</code> function.</p> 
+
+<div class="signature"><span class="fn">fin._meta.go_back()</span> <span class="returns">Returns: <a class="type" href="">undefined</a></span>   
+	<div class="description">Navigates to the previous page.</div>
+</div>
