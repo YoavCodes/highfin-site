@@ -45,7 +45,20 @@ fin.init({
 <h2>Containers</h2>
 <p>This is an array that explicitly states the order of container rendering. You can declare as many containers as you like here. In the example above we created a container by adding a div with id mainContainer to the body. Containers can also be added by templates or subtemplates.</p>
 <h2>Navigate</h2>
-<p>The navigate object is where you declare 'pages'. Each key in the navigate object is a key name corresponding to a page object. The page object's keys correspond to the containers and the array lists the templates and order of templates to render into that container.</p>
+<p>The navigate object is where you declare 'pages'. Each key in the navigate object is a key name corresponding to a page object. The page object's keys correspond to the containers array and its value, an array of <span class="type">template selectors</span>, lists the templates and order of templates to render into that container.</p>
+
+<p>a <span class="type">template selector</span> is an underscore separated template name that corresponds to a path under the <code>/templates</code> folder. A template selector does not include the file type, instead the <code>tail</code> server will attempt to read an <code>.html</code> template, then a <code>.js</code> template, then give up and log a warning for you to create either file.</p>
+<p>In the case of inline-templates, the id of the template script tag is in the format <code>template_my_template_name-html</code> where the template selector has been prefixed with the <code>template_</code> DOM id namespace and suffixed with <code>-html</code> to indicate the template type. <a href="/#!/salmon/api/templates">Read more about templates</a>.</p>
+
+<pre class="prettyprint">
+<code>[[  print( fin.fn.escapeHtml(`
+selector examples:
+'home' // /templates/home.html or /templates/home.js
+'blog_post' // /templates/blog/post.html or /templates/blog/post.js
+`) ) ]]</code>
+</pre>
+
+
 <p>There are several reserved keys that can be added to any page.</p>
 
 <pre class="prettyprint">

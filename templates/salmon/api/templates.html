@@ -1,0 +1,185 @@
+<h1>Templates</h1>
+
+<p>Salmon has a rich templating format. Imagine a compiled template as a core template format, which is essentially a javascript file wrapped in a closure that has access a set of template methods, the data passed directly into the template, and the <code>fin</code> namespace, which is all then wrapped in an error handling mechanism that gives you smart errors with line numbers in the console that map to your pre-compiled templates.</p> 
+
+<p>When you actually code templates you do so in two dirivative formats in <code>.html</code> or <code>.js</code> files saved in the <code>/templates</code> folder. The framework will then take these two sub-formats and compile &amp; cache them into the core format. The list of templates to render for a given page is declared in the <code>navigate</code> property of the <a class="type" href="/#!/salmon/api/init">configuration</a> object.</p> 
+
+<p><code>fin.nav()</code> reads the navigate object for the page being loaded and checks to see that all required templates are cached, if some are missing a request will be made to the <code>tail</code> server and all missing templates needed for that page will be returned in a single response, along with any data required at page render time.</p>
+
+<h2>Template Methods</h2>
+<h3>print</h3>
+<p><code>print()</code> is the most commonly used template method. Available in the template scope is a <code>tmpl</code> array which stores html string parts which will later be joined and then appended to the template's <code>rootNode</code>, before the rootNode is finally appended to the relevant container in the DOM.</p>
+<div class="signature"><span class="fn">print( <span class="parameter">str</span> )</span> <span class="returns">Returns: <a class="type" href="">undefined</a></span>    
+    <div class="description">pushes <span class="parameter">str</span> onto the tmpl array.</div>       
+    <div class="params">
+        <div class="param"><span class="parameter">str</span> : <a class="type">String, Document Fragment</a></div>
+        <div class="description">The next piece of template</div>       
+    </div>
+</div>
+<h3>render</h3>
+<p><code>render()</code> is used to render a template within a template. ie: sub-templating. Only available within the template scope and not to be confused with <code>fin.render()</code> it's technically a wrapper for <code>fin.r()</code> which is a wrapper for <code>fin.render()</code>. The way <code>fin.render()</code> ends up being called it returns a rendered document fragment instead of appending that fragment to a parent node.</p>
+
+<p>Essentially to make event delegation, non-contiguous <code>&#91;&#91; inline_js() &#93;&#93;</code>, and DOM node appending work properly with sub-templates, they are rendered inline, eg: if you're in a for loop the correct value for <code>i</code> can be passed into the render method, but the rendered fragment will be pushed onto the separate <code>subtmpls</code> array while a placeholder div is pushed onto the <code>tmpl</code> array. A compiled template will build the <code>tmpl</code> array, then collapse it into a single string before appending it to the <code>rootNode</code>, thereby converting the html into nodes before appending it to the DOM. This allows you to have the opening and closing tags for an html element in two separate calls to <code>print()</code> without unexpected behaviour. Once the htmlstring has been converted into nodes, all the sub-template placeholder divs will be replaced with their fragment counterparts so that events delegated to each sub-template rootNode are preserved. Or put simply: we never want the <code>rootNodes</code> of sub-templates or otherwise to be converted to strings.</p>
+<p>note: because subtemplates are manually rendered inline you should declare it as a dependency in the <a class="type" href="/#!/salmon/api/init">configuration</a> object by using a <code>require</code> block for that page.</p>
+<div class="signature"><span class="fn">render( <span class="parameter">selector</span>, <span class="parameter">data</span> )</span> <span class="returns">Returns: <a class="type" href="">undefined</a></span>    
+    <div class="description">renders a sub-template inline while preserving it's dignity.</div>       
+    <div class="params">
+        <div class="param"><span class="parameter">selector</span> : <a class="type" href="/#!/salmon/api/init">Template Selector</a></div>
+        <div class="description">The template you wish to render</div>
+        <div class="param"><span class="parameter">data</span> : <a class="type">Object</a></div>
+        <div class="description">Data you wish to pass into the sub-template, accessible as <code>data</code> inside the sub-template.</div>       
+    </div>
+</div>
+
+<h3>addEvent</h3>
+<p><code>addEvent()</code> has the same signature as jQuery's <code><a href="http://api.jquery.com/on/">$(el).on()</a></code> function. If you use <code>addEvent()</code> in a sub-template, it will attach the listeners to that sub-template's rootNode.</p>
+<div class="signature"><span class="fn">addEvent( <span class="parameter">events</span>, <span class="parameter">selector</span>, <span class="parameter">data</span>, <span class="parameter">handler</span> )</span> <span class="returns">Returns: <a class="type" href="">undefined</a></span>    
+    <div class="description">Adds a delegated event listener to the rootNode of the current template.</div>       
+    <div class="params">
+        <div class="param"><span class="parameter">events</span> : <a class="type">String</a></div>
+        <div class="description">One or more space separated events, such as "click" or "keydown.myPlugin"</div>
+        <div class="param"><span class="parameter">selector</span> : <a class="type">String</a></div>
+        <div class="description">A jQuery selector string to filter the descendants of the selected elements that trigger the event. If the selector is null or omitted, the event is always triggered when it reaches the selected element.</div>
+        <div class="param"><span class="parameter">data</span> : <a class="type">Any Type</a></div>
+        <div class="description">Data to be passed to the handler in event.data when an event is triggered.</div>  
+        <div class="param"><span class="parameter">handler</span> : <a class="type">Function</a></div>
+        <div class="description">A function to execute when the event is triggered.</div>     
+    </div>
+</div>
+<p>In the following example we have two .html templates. <code>example</code> and <code>tname2</code>. The <code>example</code> template creates a button, and adds a delegated event listener to the rootNode for clicks originating from the button with class <code>clickme</code>. It then has a for loop that renders the <code>tname2</code> template giving it the value of <code>i</code> at each loop iteration.</p>
+
+<p>The <code>tname2</code> template renders a button with the class <code>subclickme</code> and attaches a delegated event listener to the its rootNode.</p>
+
+<p>The result of rendering the <code>example</code> template will be a button labelled "click me" followed by 5 more buttons labelled "sub-template click me". There will be six event listeners, one attached to the rootNode of the <code>example</code> template, and one attached to the rootNode associated with each rendition of the <code>tname2</code> template. Clicking on the first button will log "clicked" to the console, while the other 5 buttons will log "sub-template clicked: 0"-4 depending on which button is clicked. Because each rendition of tname2 has it's own rootNode with it's own delegated listener the other listeners are not in the bubbling path of the click events and work independently of each-other while at the same time maintaining the performance of using delegated events for all events added within a given rendition of a template.</p>
+<pre class="prettyprint">
+<code>[[  print( fin.fn.escapeHtml(`
+<script type="text/template" id="template_example-html">
+   
+    <button class="clickme">click me</button>
+
+    &#91;&#91; addEvent(\`click\`, \`.clickme\`, function(){console.log(\`clicked\`)}) &#93;&#93;
+
+    &#91;&#91;
+    for(var i=0; i<5; i++) {      
+      render(\`tname2\`, {i: i})
+    }    
+    &#93;&#93;
+    
+</script>
+
+<script type="text/template" id="template_tname2-html">
+    <button class="subclickme">sub-template click me</button>
+    &#91;&#91; addEvent(\`click\`, \`.subclickme\`, function(){console.log(\`sub-template clicked: \`+data.i)}) &#93;&#93;
+</script>
+
+`) )
+]]</code>
+</pre>
+
+
+<h2>Multiline Strings</h2>
+<p>Templates support using backtick \` delimited strings anywhere strings are used. Backtick delimited strings are called 'multi-line strings'. The templating engine will worry about converting it to a single or double-quote string with appropriate concatenation and escaping. Newlines will be preseved.</p>
+
+<p>The <code>print()</code> method uses multi-line strings.</p>
+<pre class="prettyprint">
+<code>[[  print( fin.fn.escapeHtml(`
+print(\`
+<pre>
+newlines
+are
+preserved
+</pre>
+\`);
+
+// will render to
+newlines
+are
+preserved
+`) ) ]]</code>
+</pre>
+
+<p>Within a call to the <code>print()</code>method where backtick delimited string is being used as the argument, it's valid to use <code>&#91;&#91; inline_js() &#93;&#93;</code> and <code>&#123;&#123; inline_vars &#125;&#125;</code> blocks.</p>
+
+<h3><code>&#91;&#91; inline_js() &#93;&#93;</code></h3>
+<p>Within a call to the <code>print()</code> method where backticks are being used you can use double square brackets as a way to break out of the string, execute some javascript, and then return to the string. Under the hood this is what's happening:</p>
+<pre class="prettyprint">
+<code>[[  print( fin.fn.escapeHtml(`
+print(\`<div>this is a &#91;&#91; console.log('hi'); &#93;&#93; div</div>\`);
+
+// the above call to print will be compiled to:
+
+print(\`<div>this is a \`);
+console.log('hi');
+print(\` div</div>\`);
+
+// as discussed at the beginning of this help artical the print() calls are pushing string parts to the tmpl array which is later joined into a single htmlstring. &#91;&#91; inline_js() &#93;&#93; allows you to run arbitrary javascript inline as the htmlstring is being created.
+`) ) ]]</code>
+</pre>
+
+
+<h3><code>&#123;&#123; inline_vars &#125;&#125;</code></h3>
+
+<p><code>&#123;&#123; inline_vars &#125;&#125;</code> are a little more flexible and can be used within any backtick delimited string using double curly brackets. Here's what happens under the hood.</p>
+<pre class="prettyprint">
+<code>[[  print( fin.fn.escapeHtml(`
+var x = 5;
+
+print(\`<div>The value of x is: &#123;&#123; x &#125;&#125;</div>\`);
+
+// the above call to print will be compiled to:
+print(\`<div>The value of x is: \` + x + \`</div>\`);
+
+// which assuming the value of x isn't changed further down in the template will render to
+<div>The value of x is: 5</div>
+`) ) ]]</code>
+</pre>
+
+<h2>.html Templates</h2>
+<p>Now that we've covered the core templating concepts including the template methods, multi-line strings, inline js and vars we can move on to discuss how templates are actually authored. Html templates are templates created with the .html file extension in the <code>/templates</code> folder. When an .html template is compiled, the engine simply wraps the entire file in a <code>print(\`\`);</code> statement turning the entire file into a backtick delimited multiline string.</p>
+
+<p>This means that by default, in an .html template, we're already inside a <code>print(\`\`);</code> statement and so using <code>&#91;&#91; inline_js() &#93;&#93;</code> to break out of the print statement to run arbitrary javascript mid template or <code>&#123;&#123; inline_vars &#125;&#125;</code> to embed variables from the template scope into the template are seamless and more natural and intuitive.</p>
+
+<h2>.js Templates</h2>
+<p>.js templates on the other hand are not wrapped in a <code>print</code> statement during compilation. They are otherwise compiled like .html templates and support multi-line strings and the various template methods. However while .html templates are meant to be executed multiple times over the lifetime of an app whenever they're rendered, .js templates are only meant to be executed once when they're compiled.</p>
+
+
+<h3>Function Exports</h3>
+<p>The templating engine allows you to export functions as a way of namespacing your front-end methods. Typically this is done only in .js templates but could technically be done in <code>&#91;&#91; inline_js() &#93;&#93;</code> blocks within html templates. .js templates are preferred because they're executed once at compile time thereby declaring your methods once. If you were to export functions in an html template they'd be redeclared on the global fin namespace every time that template was rendered. It works as follows:</p>
+<pre class="prettyprint">
+<code>[[  print( fin.fn.escapeHtml(`
+// let's assume we have a template /templates/blog/util.js
+// with a function declared as follows
+
+exports&#46;postComment = function&#40;&#41; &#123;
+    // post a comment
+}
+
+// the rendering engine will use some built in fin methods to namespace the function as follows
+fin.fn.blog.postComment = function() {
+    // post a comment
+}
+
+// note that if fin.fn.blog doesn't exist already the rendering engine will create the node and any parents required for you
+`) )
+]]</code>
+</pre>
+
+<p>Auto namespaced functions allow you to more easily move files around, and gives you a very flexible yet predictable model to map code in files to the fin namespace.</p>
+
+<p>The benefit of declaring exported functions in .js templates and not .html templates is that because .js templates are executed at compile time, the functions are available on the namespace before the page is navigated to.</p>
+
+
+<h2>Inline Templates</h2>
+Templates can also be embedded inline in special script blocks but it's generally considered bad practice unless you have specific reasons for doing so. Inline templates are cached on <code>document ready</code>. If your concern is performance, consider using templates in the <code>/templates</code> folder and using a global page with a <code>require</code> block that pre-loads all your templates. Maintainability is generally more important than cutting down on one request. Ideally you'd really only want to pre-load templates that are likely to be used by analyzing navigation paths and making smart assumptions.
+
+<pre class="prettyprint">
+<code><h4>Example:</h4>[[  print( fin.fn.escapeHtml(`
+<script type="text/template" id="template_tname-html">
+Your template code goes here
+</script>
+<script type="text/template" id="template_tname-js">
+Your template code goes here
+</script>
+`) )
+]]</code>
+</pre>
