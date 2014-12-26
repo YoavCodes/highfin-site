@@ -26,7 +26,7 @@ exports.configureApp = function() {
 			break;		
 		default: 
 			fin.meta.title = 'Swim with the Big fish'
-			fin.meta.description = 'Tools and services to Design, Develop, and Ship your tech startup'
+			fin.meta.description = 'A collection of tools, frameworks, and services that make developing and deploying apps intuitive and fast.'
 			break;
 	}
 }
@@ -53,7 +53,7 @@ exports.selectMenu = function() {
 
 // from mustache
 var entityMap = {
-    "&": "&amp;",
+    //"&": "&amp;",
     "<": "&lt;",
     ">": "&gt;",
     '"': '&quot;',
@@ -62,7 +62,7 @@ var entityMap = {
     "\t": "    "
   };
 exports.escapeHtml = function(string) {
-    return String(string).replace(/[&<>"'\/\t]/g, function (s) {
+    return String(string).replace(/[<>"'\/\t]/g, function (s) {
       return entityMap[s];
     });
   }
