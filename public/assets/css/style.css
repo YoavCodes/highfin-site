@@ -325,6 +325,13 @@ a {
   background: rgba(0, 0, 0, 0.1);
   box-shadow: 0px 2px 0px #000000;
 }
+#sidebar h2 {
+  font-size: 21px;
+  color: #538492;
+  margin: 10px 0px 1px 7px;
+  background: #031422;
+  padding: 2px 10px;
+}
 #sidebar .menu li {
   height: 20px;
   padding-left: 10px;
