@@ -1,0 +1,26 @@
+<h1>Console Reporting</h1>
+<p>Salmon provides some helpful functions for reporting to the console. Globally a <code>log()</code> function provides safe logging to the console. In addition throughout the framework we have helpful colour coded error messages for logging errors and likely solutions.</p>
+
+<div class="signature"><span class="fn">log( <span class="parameter">...msg</span> )</span> <span class="returns">Returns: <a class="type" href="">undefined</a></span>    
+	<div class="description">Ensures a console exists before calling <code>console.log</code></div>       
+    <div class="params">
+        <div class="param"><span class="parameter">...msg</span> : <a class="type">Any Type</a></div>
+        <div class="description">Comma separated arguments of any type.</div>       
+    </div>
+</div>
+
+<div class="signature"><span class="fn">fin.log.error( <span class="parameter">msg</span> )</span> <span class="returns">Returns: <a class="type" href="">undefined</a></span>    
+	<div class="description">Ensures a console exists before calling <code>console.log</code> with a colour coded error string.</div>       
+    <div class="params">
+        <div class="param"><span class="parameter">msg</span> : <a class="type">String</a></div>
+        <div class="description">The message to log.</div>       
+    </div>
+</div>
+
+<div class="signature"><span class="fn">fin.log.solution( <span class="parameter">msg</span> )</span> <span class="returns">Returns: <a class="type" href="">undefined</a></span>    
+	<div class="description">Ensures a console exists before calling <code>console.log</code> with a colour coded solution string.</div>       
+    <div class="params">
+        <div class="param"><span class="parameter">msg</span> : <a class="type">String</a></div>
+        <div class="description">The message to log.</div>       
+    </div>
+</div>
