@@ -1,0 +1,98 @@
+<h1>Ajax Forms</h1>
+<p>Salmon has built in support for Ajax forms capable of multi-file uploads across browsers that don't have support for html5 apis. The current implementation relies on using iframes and json-p. As obsolete browsers lose market share this will be replaced by an entirely javascript driven mechanism. Until then, here's how ajax forms work in Salmon.</p>
+
+<p>Assume the following .html template:</p>
+<pre class="prettyprint">
+<code>[[  print( fin.fn.escapeHtml(`
+<form id="loginForm" ajaxform hashbang="blog/post/1" command="postComment" 
+	onSuccess="fin.fn.blog.comments.successHandler" onError="fin.fn.blog.errorHandler" 
+	validator="fin.fn.blog.comments.commentValidator">
+
+    <input type="text" name="username" />
+    <textarea name="comment" ></textarea>
+
+    <input type="submit" value="Login" />
+</form>
+
+`) )
+]]</code>
+</pre>
+
+<h2>Attributes</h2>
+<p>The only thing needed to turn a form into an ajax form is the <code>ajaxform</code> attribute. Salmon will listen for and catch submit events for all ajaxforms directing their http request to incremental hidden iframes. That way it happens asynchronously while it waits for the tail server to return a json-p response.</p>
+
+<p><code>hashbang</code> and <code>command</code> are used by server-side routing to pass the form fields to the right server handler code.
+
+<p><code>onSuccess</code> and <code>onError</code> are both referencing exported client-side template functions. There are global success and error handlers for ajaxforms which will be overridden if your own handlers are specified here.</p>
+
+
+<h2>Validators</h2>
+<p>Here is the template at <code>/templates/blog/comments.js</code> containing the commentValidator function referenced in the <code>validator</code> attribute of the ajaxform above.</p>
+<pre class="prettyprint">
+<code>[[  print( fin.fn.escapeHtml(`
+exports&#46;commentValidator = function(form, inputs){    
+	// each fin.v.strlen() call will return true or false
+	// using && a single false will make this function return false.
+	return fin.v.strlen(form, 'username', 3, 8) && fin.v.strlen(form, 'comment', 3, 400)   
+} 
+`) )
+]]</code>
+</pre>
+
+<p>Form validation consists of multiple parts in Salmon so brace yourself.</p>
+
+<p>The built-in submit handler for ajaxforms will call your validator function if specified, in this case it's <code>fin.fn.blog.comments.commentValidator()</code> shown above. In your validator function you call field validators for each field with the goal of ultimately returning true or false to let the submit handler know if the form is valid or not. In the example above both fields have to be a valid length for the form to be valid, but it's really up to you.</p> 
+
+<p><code>fin.v.strlen()</code> is a field validator. You can write your own field validators using the following pattern. Here is the built-in <code>fin.v.strlen()</code> field validator which validates a field against a minimum and maximum character length:</p>
+
+<pre class="prettyprint">
+<code>[[  print( fin.fn.escapeHtml(`
+strlen: function(form, name, min, max) {
+	min = min||0;
+	max = max||Infinity;
+	try {
+		return fin.v.validate(form, name, function(field, name, value){	
+			if(value.length < min || value.length > max) { 
+				return [false, name+" required length of "+min+"-"+max];
+			}
+			return [true]
+		})
+	} catch(err) {
+		fin.log.error("error in fin.v.strlen validator: "+err.message);
+		return false
+	}
+}
+`) )
+]]</code>
+</pre>
+<p>As you can see <code>strlen</code> takes a <code>min</code> and <code>max</code> value, sets some defaults and then follows a specific pattern to return true or false. If you look at it it's not returning boolean values directly, there's an extra step we haven't discussed yet. Under the hood <code>strlen</code> is a closure which passes an unnamed function that has access to it's scope into <code>fin.v.validate()</code>. Your unnamed function can either return <code>[true]</code> if the field is valid, or <code>[false, 'message']</code> if the field is invalid. The <code>fin.v.validate()</code> function will catch a <code>[false, 'message']</code> return value from your unnamed method, set the error message to that field's <code>data-validation-error</code> attribute in the DOM, and return an appropriate boolean for your <code>commentValidator</code> function to deal with. Whether you display field errors as a tooltip, alert, or at all is up to you.</p>
+
+<p>It doesn't really matter if you do you validation logic in <code>strlen</code>'s scope or the unnamed function, as long as you have the return values in the unnamed function. On the other hand if you don't need the features of <code>fin.v.validate()</code> you could bypass this pattern entirely and write validators that just return true or false.</p>
+<div class="signature"><span class="fn">function( <span class="parameter">form</span>, <span class="parameter">name</span>, <span class="parameter">...args</span> )</span> <span class="returns">Returns: <a class="type" href="">Boolean</a></span>    
+	 <div class="description">Field validator signature.</div>
+    <div class="params">
+        <div class="param"><span class="parameter">form</span> : <a class="type">Form Element</a></div>
+        <div class="description">The form element, likely jQuery-fied.</div>  
+        <div class="param"><span class="parameter">name</span> : <a class="type">String</a></div>
+        <div class="description">The name of the field you want to validate.</div>   
+        <div class="param"><span class="parameter">args...</span> : <a class="type">Any Type</a></div>
+        <div class="description">Comma separated arguments specific to your validate method</div>      
+    </div>
+</div>
+<p>The unnamed function passed into <code>fin.v.validate()</code> has the following signature:</p>
+<div class="signature"><span class="fn">function( <span class="parameter">field</span>, <span class="parameter">name</span>, <span class="parameter">value</span> )</span> <span class="returns">Returns: <a class="type" href="">Array [true] or [false, 'msg']</a></span>   
+	<div class="description">The unnamed function passed into <code>fin.v.validate()</code></div> 
+    <div class="params">
+        <div class="param"><span class="parameter">field</span> : <a class="type">Form Element</a></div>
+        <div class="description">The jQuery-fied form field element eg: an input.</div>  
+        <div class="param"><span class="parameter">name</span> : <a class="type">String</a></div>
+        <div class="description">The name of the field being validated.</div>   
+        <div class="param"><span class="parameter">value</span> : <a class="type">Any Type</a></div>
+        <div class="description">The value of the field being validated.</div> 
+    </div>
+</div>
+
+<h2>Response</h2>
+<p>The server will respond to ajaxforms with the same json object used for data retrival during navigation, but with extra padding, ie: json-p. the json-p calls a jsonp handler function which provides generic error handling for connection errors, cleans up the async iframe window that was being used, determines if the res.meta.status is a 200 or error, and passes the response on to the onSuccess or onError handlers if they were specified and exist.</p>
+
+<p>note: The default behaviour with form reponses is for fin.data to be automatically extended and updated with the response data, and as such res.data should follow a global tree structure for your app's data.</p>
