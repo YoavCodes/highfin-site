@@ -1,0 +1,37 @@
+<h1>Extending fin with Plugins</h1>
+<p>The most common way to extend the fin namespace is using exported functions in .js templates. These will be namespaced onto <code>fin.fn</code> in a structure mirroring the structure of your <code>/templates</code> folder. .js templates are the appropriate place for all your front-end javascript and they're loaded dynamically. <a href="/#!/salmon/api/templates">Read more about templates.</a></p> 
+
+<p>If you want to share functions accross projects or otherwise provide some core functionality improving fin itself consider creating a plugin. Plugins are written in javascript files in <code>/public/assets/js</code> or some other suitable folder. Plugins extend <code>fin.pg</code>, the nature of how you organize the api of your plugin depends on how you code your plugin. This gives you more consistency across projects compared to the template engines auto-namespacing of exported functions.</p>
+
+<p>Plugins should be included on your page after fin.js but before calling <code>fin.init()</code>. You can use the following boilerplate:</p>
+
+<pre class="prettyprint">
+<code>[[  print( fin.fn.escapeHtml(`
+/* plugin.fin.js v1.0.0
+ * Copyright 2012-2013, Author ( author@email.com )
+ * http://website.com
+ *
+ * Released under licence
+ *
+ * Updated: 
+ * This is the fin plugin boilerplate. Include this file after fin.js but before calling fin.init()
+ * In the example below, testfunc will be available at fin.pg.myPlugin.testfunc after calling fin.init()
+ */
+;(function($, fin) {
+
+if(typeof fin.prototype.plugins === 'undefined') {
+	fin.prototype.plugins = {};
+}
+
+$.extend(true, fin.prototype.plugins, {
+	myPlugin: {
+		testfunc: function testfunc() {
+			fin.util.log.solution('hello plugin');
+		}
+	}
+})
+
+})(jQuery, fin);
+`) )
+]]</code>
+</pre>
