@@ -523,6 +523,13 @@ var fin = function fin(obj_path, object){
 	return dot(obj_path, object, findings);
 };
 
+// alias for fin() when directly accessing the data model.
+// instead of fin('fin.data.posts').find(11).get('title')
+// can do fin.db('posts').find(11).get('title')
+fin.db = function(obj_path) {			
+	return fin(obj_path, fin.data);
+}
+
 
 // settings and defaults
 fin.settings = $.extend(true, {}, {		
