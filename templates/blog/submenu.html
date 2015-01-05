@@ -1,5 +1,29 @@
+[[
+	var current_user = fin('fin.data.current_user.display_name').val;
+]]
+
 <ul class="menu horizontal left_menu">			
 	<li name="latest"><a href="/#!/blog">Latest posts</a></li>
 </ul>
 
 <span>{{ fin.meta.update }}</span>
+
+
+
+[[ fin('fin.data.current_user.display_names').val; ]]
+
+<ul class="menu horizontal right_menu">
+
+[[ if( typeof current_user === 'string' ) { ]]
+	<li><a href="/#!/blog/admin/overview">Admin</a></li>
+	<li><a class="active">Hi {{ current_user }}</a></li>
+	<li><a href="/#!/blog/admin/logout">Logout</a></li>
+[[ } else { ]]
+	<li><a href="/#!/blog/admin/overview">Admin</a></li>
+[[ } ]]
+
+</ul>
+
+
+
+

@@ -1,0 +1,15 @@
+<h1>Activate Your Account</h1>
+<p>Thanks for registering on Highf.in. Check your inbox for an activation code.</p>
+<form id="activateform" ajaxform hashbang="blog/admin/forms" command="activate"
+	validator="fin.fn.blog.activateValidator" onSuccess="fin.fn.blog.activateSuccess">
+	
+	<label for="email">Email:</label>
+	<input name="email" type="text" />
+
+	<br /><label for="activation_code">Activation Code:</label>
+	<input name="activation_code" type="text" />
+
+	<br /><input type="submit" class="btn btn-primary" value="Activate" />
+	<br /><a class="btn btn-inverse" href="/#!/blog/admin/login">Login</a>
+
+</form>

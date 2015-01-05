@@ -4,14 +4,14 @@
 <p>Assume the following .html template:</p>
 <pre class="prettyprint">
 <code>[[  print( fin.fn.escapeHtml(`
-<form id="loginForm" ajaxform hashbang="blog/post/1" command="postComment" 
+<form id="commentForm" ajaxform hashbang="blog/post/1" command="postComment" 
 	onSuccess="fin.fn.blog.comments.successHandler" onError="fin.fn.blog.errorHandler" 
 	validator="fin.fn.blog.comments.commentValidator">
 
     <input type="text" name="username" />
     <textarea name="comment" ></textarea>
 
-    <input type="submit" value="Login" />
+    <input type="submit" value="Post Comment" />
 </form>
 
 `) )
@@ -19,11 +19,18 @@
 </pre>
 
 <h2>Attributes</h2>
-<p>The only thing needed to turn a form into an ajax form is the <code>ajaxform</code> attribute. Salmon will listen for and catch submit events for all ajaxforms directing their http request to incremental hidden iframes. That way it happens asynchronously while it waits for the tail server to return a json-p response.</p>
+<p>The only thing needed to turn a form into an ajax form is the <code>ajaxform</code> attribute. Salmon will listen for and catch submit events for all ajaxforms directing their http request to incremental hidden iframes. That way it happens asynchronously while it waits for the tail server to return a json-p response. The <code>method</code> will automatically be set to <code>post</code> and the <code>action</code> automatically set to the tail-server endpoint.</p>
 
 <p><code>hashbang</code> and <code>command</code> are used by server-side routing to pass the form fields to the right server handler code.
 
-<p><code>onSuccess</code> and <code>onError</code> are both referencing exported client-side template functions. There are global success and error handlers for ajaxforms which will be overridden if your own handlers are specified here.</p>
+<p><code>onSuccess</code> and <code>onError</code> are both referencing exported client-side template functions. There are global success and error handlers for ajaxforms which will be overridden if your own handlers are specified here. If client side validation fails onError will be called with no arguments.</p>
+<div class="signature"><span class="fn">onSuccess( <span class="parameter">res</span> )</span> <span class="returns">Returns: <a class="type" href="">undefined</a></span>    
+	 <div class="description">Form onSuccess handler</div>
+    <div class="params">
+        <div class="param"><span class="parameter">form</span> : <a class="type">Form Element</a></div>
+        <div class="description">The form element, likely jQuery-fied.</div>      
+    </div>
+</div>
 
 
 <h2>Validators</h2>

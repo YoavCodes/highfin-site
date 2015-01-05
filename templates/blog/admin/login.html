@@ -1,0 +1,14 @@
+<h1>Login</h1>
+<form id="loginform" ajaxform hashbang="blog/admin/forms" command="login"
+	validator="fin.fn.blog.loginValidator" onSuccess="fin.fn.blog.loginSuccess">
+	
+	<label for="email">Email:</label>
+	<input name="email" type="text" />
+
+	<br /><label for="password">Password:</label>
+	<input name="password" type="password" />
+
+	<br /><input type="submit" class="btn btn-primary" value="Login" />
+	<br /><a class="btn btn-inverse" href="/#!/blog/admin/register">Register</a>
+
+</form>

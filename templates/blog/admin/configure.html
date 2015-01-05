@@ -1,0 +1,12 @@
+<h1>Install</h1>
+<p>Configure the site.</p>
+<form id="configureform" ajaxform hashbang="blog/admin/forms" command="install"
+	validator="fin.fn.blog.configureValidator" onSuccess="fin.fn.blog.configureSuccess">
+
+	<br /><label for="mailgun_api_key">MailGun API Key:</label>
+	<input name="mailgun_api_key" type="text" />
+
+	<br /><input type="submit" class="btn btn-primary" value="configure site" />
+	<br /><a class="btn btn-inverse" href="/#!/blog/admin/login">Login</a>
+
+</form>

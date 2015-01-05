@@ -14,15 +14,10 @@ log = function log() {
 	// global error handler
 	// process will still crash, but we can do stuff after it crashes, like send an email or log it to a dashboard or something
 */
-process.on('uncaughtException', function(e) {
-    // something
-    try {
-        log(e);  
-
-    } catch (err) {
-        //uggg
-    }
-})
+// process.on('uncaughtException', function(e) {
+//     // something
+//    log(e.stack)
+// })
 
 
     
@@ -32,14 +27,19 @@ tail = {
         // used for storing application functions. ie: controllers and public models in MVC
         // typically not defined here.
     },
+    db: require('./tail/goldfish'),
+    flow: require('./tail/flow'),
     util: {          
         /*
         extend an object, can be used as clone by specifying a a new blank object in the first param, and the object to clone in in the second
         */
+        // todo: should use fin's extend method here when we can share code between fe and be better.
         extend: function extend(obj) {
             Array.prototype.slice.call(arguments, 1).forEach(function(source) {
                 if (source) {
                     for (var prop in source) {
+                        if (source[prop] === null) continue
+                
                         if (source[prop].constructor === Object) {
                             if (!obj[prop] || obj[prop].constructor === Object) {
                                 obj[prop] = obj[prop] || {};

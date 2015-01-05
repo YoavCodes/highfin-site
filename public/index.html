@@ -252,13 +252,49 @@ fin.init({
                 },
 
         /* Blog */
-        blog_latest: {
+        blog: {
             parents: ['global'],
+            require: ['blog_f'],
             contentContainer: ['content.with.sidebar'],
             submenu: ['blog_submenu'],
-            sidebar: ['blog_sidebar'],
-            content: ['blog_content']
-        }
+            sidebar: ['blog_sidebar']
+        },        
+            blog_posts: {            
+                parents: ['blog'],
+                content: ['blog_posts']
+            },
+            blog_post: {            
+                parents: ['blog'],
+                content: ['blog_post']
+            },
+            /* blog admin */
+            blog_admin_configure: {
+                parents: ['blog'],
+                content: ['blog_admin_configure']
+            },
+            blog_admin_login: {
+                parents: ['blog'],
+                content: ['blog_admin_login']
+            },
+            blog_admin_logout: {
+                before_func: [ ['fin.fn.blog.logout', {}] ]
+            },
+            blog_admin_register: {
+                parents: ['blog'],
+                content: ['blog_admin_register']
+            },            
+            blog_admin_activate: {
+                parents: ['blog'],
+                content: ['blog_admin_activate']
+            },
+            blog_admin_overview: {
+                parents: ['blog'],
+                content: ['blog_admin_overview']
+            },
+            blog_admin_editpost: {
+                parents: ['blog'],
+                content: ['blog_admin_editpost']
+            }
     },        
     routes: { // a map of hashbang urls to navigate templates
         /* Salmon */
@@ -285,8 +321,7 @@ fin.init({
         'salmon/api/templates': 'salmon_api_templates',
         'salmon/api/forms': 'salmon_api_forms',
         'salmon/api/plugins': 'salmon_api_plugins',
-        'salmon/api/console': 'salmon_api_console',
-
+        'salmon/api/console': 'salmon_api_console',       
 
         /* Guppy */
         'guppy': 'guppy_start_intro',
@@ -318,8 +353,16 @@ fin.init({
         'aquatic/using/configuration': 'aquatic_using_configuration',
         'aquatic/using/vagrant': 'aquatic_using_vagrant',
 
-        /* Blog */
-        'blog': 'blog_latest'
+        /* Blog */       
+        'blog': 'blog_posts',
+        'blog/post': 'blog_post',
+        'blog/admin/configure': 'blog_admin_configure',
+        'blog/admin': 'blog_admin_login',
+        'blog/admin/logout': 'blog_admin_logout', // has route, handled on the server with redirect, but no page.
+        'blog/admin/register': 'blog_admin_register',
+        'blog/admin/activate': 'blog_admin_activate',
+        'blog/admin/overview': 'blog_admin_overview',
+        'blog/admin/editpost': 'blog_admin_editpost',
 
     },
     callbacks: { // events and callbacks to extend highfin

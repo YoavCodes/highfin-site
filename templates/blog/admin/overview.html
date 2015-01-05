@@ -1,0 +1,12 @@
+[[ var posts = fin('fin.data.posts').sortByDate('date_created'); ]]
+
+<h1>Admin</h1>
+
+<h2>Posts</h2>
+<a class="btn btn-primary" href="/#!/blog/admin/editpost/new">+ New Post</a>
+
+<br />
+[[ for( var i=0; i<posts.length; i++ ) { ]]
+	<div class="post"><h2><a href="/#!/blog/admin/editpost/{{ posts[i].rowid }}">{{ posts[i].title }}</a></h2> {{ posts[i].content.substr(0,77) }} <br /><br />Created by {{ fin(posts[i].author).get('display_name') }} on  {{ new Date(posts[i].date_created).toLocaleDateString() }} at {{ new Date(posts[i].date_created).toLocaleTimeString() }} </div>
+[[ } ]]
+

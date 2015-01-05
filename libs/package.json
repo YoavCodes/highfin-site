@@ -1,14 +1,14 @@
 {
-    "name": "my-salmon-app",
+    "name": "highfin-site",
     "preferGlobal": "false",
     "version": "0.1.0",
     "author": "My name",
-    "description": "My salmon app",
+    "description": "Highf.in documentation site.",
     "scripts": {
         "preinstall": ""
     },
-    "dependencies": {
-        
+    "dependencies": {                
+        "mailgun": "0.5.0"
     },
     "noAnalyze": true,
     "devDependencies": {},

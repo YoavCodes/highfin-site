@@ -1,0 +1,8 @@
+[[ var posts = fin('fin.data.posts').where('published').truthyFalsey(true).sortByDate('date_created'); ]]
+
+[[ for( var i=0; i<posts.length; i++ ) { ]]
+<div class="post">
+	<h1>{{ posts[i].title }}</h1>
+	<div class="postcontent">{{ posts[i].content }}</div>
+</div>
+[[ } ]]

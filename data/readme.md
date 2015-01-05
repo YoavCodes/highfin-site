@@ -1,1 +1,1 @@
-Every instance in this project will have access to a shared data folder. on deploy this folder will be replaced by a link to that shared folder on the server. 
+Every instance in this project will have access to a shared data folder. on deploy this folder will be replaced by a link to or nfs mount of that shared folder on the server. So use /data for data created by your app, that's specific to a deploy environment, like a database.

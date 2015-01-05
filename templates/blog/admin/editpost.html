@@ -1,0 +1,55 @@
+[[
+var rowid = fin._meta.segments[fin._meta.segments.length -1];
+var title='', content='', checked='';
+var post = fin('fin.data.posts.'+rowid);
+if(rowid != 'new') {
+	title = post.find('title').string()
+	content = post.find('content').string()
+	if( post.find('published').bool() )
+		checked="checked"
+}
+
+]]
+
+<h1>Edit Post</h1>
+
+
+<form id="blogPostform" ajaxform hashbang="blog/admin/forms" command="editpost"
+	validator="fin.fn.blog.editPostValidator" onSuccess="fin.fn.blog.editPostSuccess">
+	
+	<label for="title">Title:</label>
+	<div contenteditable class="edit title">{{ title }}</div>
+	<input style="display:none" name="title" class="edit title" type="text" />
+
+	<br /><label for="content">Content:</label>
+	<div contenteditable class="edit content">{{ content }}</div>
+	<textarea style="display:none" name="content" class="edit content"></textarea>
+
+	<label for="published">Publish:</label>
+	<input name="published" type="checkbox" {{ checked }} />
+
+[[
+if( rowid !== 'new') {
+	print(`<input type="hidden" name="rowid" value="`+rowid+`" />`)
+}
+]]
+
+	<br /><hr style="border: 5px solid black;" />
+	<input type="submit" class="btn btn-primary" value="Save" />
+	
+
+</form>
+[[
+if( rowid !== 'new') {
+
+	print(`<a class="btn btn-inverse deletepost">Delete Post</a>`);
+	
+	addEvent('click', '.deletepost', function() {
+		fin.getData({command: 'delete', rowid: rowid}, function() {			
+			// success callback			
+			fin.data('fin.data.posts').find(rowid).remove();			
+		})
+	});
+
+}
+]]
