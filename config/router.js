@@ -67,6 +67,8 @@ exports.router = function(res, req, pathname, segments, command) {
 											tail.app.blog.savePost(res);
 											break;
 										default:
+											// submitted login form when already logged in
+											res.redirect('/#!/blog/admin/overview')
 											res.kill()
 											return;
 									}
