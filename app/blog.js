@@ -1,4 +1,4 @@
-function getAllPosts(res) {
+function getAllPosts(res) {	
 	tail.util.extend( res.response.data, tail.db('posts').results('sortByDate') )
 	res.kill(200)
 }
@@ -41,7 +41,7 @@ function savePost(res) {
 		var query = tail.db('posts').insert({
 			title: title,
 			content: content,
-			author: '--users.'+author_id,
+			author: author_id,
 			categories: categories,
 			tags: tags,
 			published: published,
@@ -67,7 +67,7 @@ function savePost(res) {
 		var post = tail.db('posts').find(rowid).val;
 		post.title = title;
 		post.content = content;
-		post.author = '--users.'+author_id;
+		post.author = author_id;
 		post.categories = categories;
 		post.tags = tags;
 		post.published = published;		

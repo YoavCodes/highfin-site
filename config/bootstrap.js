@@ -1,3 +1,5 @@
+var schema = require('./schema');
+
 //
 //	Code in /app/**/*.js is executed when the server starts
 //	Use the bootstrap() function below to run code that has to start after all /app/**/*.js code has loaded
@@ -12,15 +14,18 @@ function bootstrap(next) {
 	)	
 }
 
-
 // bootrap sqlite
 function createDB(next) {
 	// ensure db file exists in /data/db.db and bootstrap database with tables
+	tail.db.init();
+	tail.db.setSchema(schema);
+
 	tail.flow.parallel(		
 		function(next) {				
+			
 			next()
 		},
-		function(next) {						
+		function(next) {				
 			next()
 		},
 		next

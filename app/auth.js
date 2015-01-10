@@ -3,16 +3,14 @@ var crypto = require('crypto');
 // login
 function createSession(res, req) {
 	var email = res.fields.email;
-	var password = res.fields.password;
-
+	var password = res.fields.password;	
 	if (email.length > 0 && password.length > 0) {
 
 		var pass_hash = crypto.createHash('sha256').update(password).digest('base64');
 
 		// todo: limit
 		var query = tail.db('users').where('email').is(email).and('pass_hash').is(pass_hash).sort();
-		var user = query[0];
-
+		var user = query[0];		
 		if( query.length > 0 ) {
 			if (user.activation_code !== '') {
 				res.response.meta.errors.push('You need to activate your email.');
@@ -35,6 +33,9 @@ function createSession(res, req) {
 			// to admin overview page
 			res.setHeader( "Set-Cookie", [ "session_id="+session_id, 'expires='+new Date(new Date().getTime()+86409000).toUTCString() ] );
 			res.redirect('/#!/blog/admin/overview')
+			res.kill(200); 
+		} else {
+			res.response.meta.errors.push('username and/or password incorrect')
 			res.kill(200); 
 		}
 	} else {
@@ -146,7 +147,7 @@ function logout(res) {
 
 // check if user is authenticated.
 // todo: add username
-function isAuthed(res, req) {
+function isAuthed(res, req) {	
 	var authed = {
 		hasSession: function(fn) { if(fn) { this._hasSession = fn; return this } else { if (this._hasSession) { this._hasSession() } } },
 		_hasSession: null,
@@ -178,6 +179,7 @@ function isAuthed(res, req) {
 				var query = tail.db('users').where('ip_address').is(req.connection.remoteAddress)
 											.and('session_id').is(session_id);
 				var sorted = query.sort();
+				
 
 				if(sorted.length > 0) {
 					// session_id was valid, user is still authed, extend cookie expiration time
@@ -192,6 +194,7 @@ function isAuthed(res, req) {
 
 					// if hasSession was set, then call it
 					authed.hasSession();
+
 				} else {
 					authed.noSession();
 				}

@@ -439,7 +439,7 @@ var fin = function fin(obj_path, object){
 		}
 
 		// loop for iterating through object, following dot.paths
-		var value;
+		//var value;
 		if(path.length > 0) {
 			 
 			findings.val = path[0];
