@@ -169,6 +169,7 @@ function fin(obj_path, object){
 		},
 		// set a new value
 		set: function(new_value, follow_dotkeys) {
+			this.create_nodes = true;
 			dot(obj_path, object, findings, false, new_value, follow_dotkeys);
 			changed = true
 			return findings;
