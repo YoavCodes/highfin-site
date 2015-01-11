@@ -125,6 +125,7 @@ function fin(obj_path, object, create_nodes){
 		// manipulating values/properties that store the first dotkey before following the chain
 		key: "", // if the value of obj_path is a dotkey, store the dotkey string here. we only care about the dotkey at the original obj_path. not the rest in the chain		
 		schema: _data.schema, // keep track of the schema of the current node.
+		schema_type: '',
 		last_key: obj_path, // last_key keeps track of the last dotkey reference followed. it's a direct reference to the object in val
 		last_insert_id: void 0, // chaining calls after insert can access the row id
 		create_nodes: create_nodes || false, // toggle to true to create object nodes if they don't exist, useful for saving data to the model.
@@ -152,7 +153,8 @@ function fin(obj_path, object, create_nodes){
 		*/
 		// narrow down findings
 		find: function(dot_path) {
-			return fin(dot_path, findings.val);
+			dot_path = obj_path + "." + dot_path;
+			return fin(dot_path);
 		},		
 		// returns the value of a subnode without modifying our current findings object
 		get: function(dot_path) {			
@@ -164,8 +166,8 @@ function fin(obj_path, object, create_nodes){
 		// note: because get() changes the value of .val without changing any of the other findings properties
 		// it's only useful just before calling .result(), so .result() is called for you
 		// if you want the record itself use find('1').val instead.
-		getResult: function(dot_path) {
-			return fin(this.last_key+'.'+dot_path).result();			
+		getResult: function(dot_path) {		
+			return fin(this.last_key +'.'+dot_path).result();
 		},
 		createNodes: function() {
 			this.create_nodes = true;
@@ -396,7 +398,7 @@ function fin(obj_path, object, create_nodes){
 		},
 
 		/// returns a clone of the data.
-		getResults: function(sorted_array) {						
+		getResults: function(sorted_array) {	
 			// create data structure	
 			for(var s=0; s<sorted_array.length; s++) {
 				if(sorted_array[s].constructor === Object) {
@@ -407,6 +409,7 @@ function fin(obj_path, object, create_nodes){
 			var schema = this.schema;	
 			var prop_schema = schema;
 			var dot_paths = []; // prevent circular references	
+			var key;
 			
 			function buildTree(dot_path, val) {
 				if(dot_paths.indexOf(dot_path) > -1) {
@@ -449,7 +452,10 @@ function fin(obj_path, object, create_nodes){
 			function resolveRefs(document, schema) {				
 				var refs = []
 				var ref;
-				for(var prop in document) {					
+				for(var prop in document) {	
+					if(typeof schema === 'undefined') {
+						continue
+					}				
 					prop_schema = schema.__default[prop];
 					if(typeof prop_schema !== 'undefined' && prop_schema.__private === true) {
 						delete document[prop];
@@ -474,8 +480,11 @@ function fin(obj_path, object, create_nodes){
 
 
 			for(var i=0; i<sorted_array.length; i++) {
-				
-				var key = this.last_key + "." + sorted_array[i].rowid // this will be posts
+				if(typeof this.schema !== 'undefined' && this.schema_type === 'collection') {
+					key = this.last_key + "." + sorted_array[i].rowid // this will be posts					
+				} else {
+					key = this.last_key;
+				}
 				
 				var path = buildTree(key, sorted_array[i])
 				
@@ -528,18 +537,23 @@ function fin(obj_path, object, create_nodes){
 				var path_i = path[i];
 
 				var findings_val_path_i = findings.val[path_i];
-				
+
 				if(isServer === true && typeof findings.schema !== 'undefined') {
-					if(findings.schema.__type === 'collection') {
+					//findings.schema_type = findings.schema.__type;
+					if(findings.schema_type === 'collection') {
 						// if the parent of this node is a collection
 						// set this type to document
-						findings.schema.__type = 'document'
-					} else if (typeof findings.schema.__default !== 'undefined') {
+						findings.schema_type = 'document'
+					} else if (findings.schema_type === 'document' && typeof findings.schema.__default !== 'undefined') {
 						// get the schema via document schema
 						findings.schema = findings.schema.__default[path_i];
+						findings.schema_type = findings.schema.__type;
 					} else {
 						// no parent type, likely top of schema tree
 						findings.schema = findings.schema[path_i];
+						if(typeof findings.schema !== 'undefined') {
+							findings.schema_type = findings.schema.__type;
+						}
 					}
 					if(typeof findings.schema !== 'undefined') {
 						// now that schema has been set for this node
