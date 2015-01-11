@@ -97,7 +97,7 @@ function setSchema(new_schema) {
 
 
 
-function fin(obj_path, object){
+function fin(obj_path, object, create_nodes){
 
 	if(obj_path === null || typeof obj_path === "undefined") {
 		obj_path = "";
@@ -127,7 +127,7 @@ function fin(obj_path, object){
 		schema: _data.schema, // keep track of the schema of the current node.
 		last_key: obj_path, // last_key keeps track of the last dotkey reference followed. it's a direct reference to the object in val
 		last_insert_id: void 0, // chaining calls after insert can access the row id
-		create_nodes: false, // toggle to true to create object nodes if they don't exist, useful for saving data to the model.
+		create_nodes: create_nodes || false, // toggle to true to create object nodes if they don't exist, useful for saving data to the model.
 		select: [],// allow selecting an array of properties. used in results and result calls
 		/*
 			return findings
@@ -167,6 +167,10 @@ function fin(obj_path, object){
 		getResult: function(dot_path) {
 			return fin(this.last_key+'.'+dot_path).result();			
 		},
+		createNodes: function() {
+			this.create_nodes = true;
+			return findings;
+		},
 		// set a new value
 		set: function(new_value, follow_dotkeys) {
 			this.create_nodes = true;
@@ -181,21 +185,30 @@ function fin(obj_path, object){
 		},
 		// adds a child document to a collection
 		insert: function(child) {
-			if(this.val)
+			
 			// get nextid
 			// todo: race condition, create database lock mechanism that prevents inserting a child of a collection
 			// while an insert is taking place. maybe store it in info __insert_lock
-			var __index = fin(this.last_key, _data.info).find('index');
+			
+			var __index = fin(this.last_key, _data.info).find('index');			
+			if(typeof __index.val === 'undefined') {				
+				__index = fin(this.last_key+'.index', _data.info, true).set(0)
+			}
+			
 			var id = (parseInt(__index.val, 10) || 0) + 1;
+			
 			__index.set(id);
 
 			child.rowid = id.toString();
+			var _findings = fin(obj_path, object, true)
 
-			this.val[id] = child;
+			_findings.val[id] = child;
 
-			this.last_insert_id = id;
+			_findings.last_insert_id = id;
 			changed = true;
-			return findings;
+			
+			return _findings;
+
 		},
 		// get the item we just inserted
 		inserted_child: function() {
