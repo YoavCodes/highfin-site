@@ -470,6 +470,11 @@ function fin(obj_path, object, create_nodes){
 					for(var r=0; r<refs.length; r++) {		
 						ref = refs[r];				
 						var dot_ref = prop_schema.__default.substr(2) + '.' + ref;
+						if(prop_schema.__type === 'ref') {
+							document[prop] = '--'+dot_ref;
+						} else if(prop_schema.__type === 'ref_array') {
+							document[prop][r] = '--'+dot_ref;
+						}
 						var resolved_document = buildTree(dot_ref, fin(dot_ref).val);						
 						// todo: replace _data.schema[prop_schema.__default.substr(2)] with a function or special call to fin()
 						// that can traverse the schema to support dot references multiple levels deep.
@@ -481,7 +486,7 @@ function fin(obj_path, object, create_nodes){
 
 			for(var i=0; i<sorted_array.length; i++) {
 				if(typeof this.schema !== 'undefined' && this.schema_type === 'collection') {
-					key = this.last_key + "." + sorted_array[i].rowid // this will be posts					
+					key = this.last_key + "." + sorted_array[i].rowid 
 				} else {
 					key = this.last_key;
 				}
