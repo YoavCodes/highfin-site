@@ -331,9 +331,7 @@ var fin = function fin(obj_path, object){
 		if findings.results.length > 0, then use it, otherwise use findings.val
 
 		*/
-		results: function(sort_by) {			
-			//console.log(this.sort())
-			//console.log('results')
+		results: function(sort_by) {									
 			if(sort_by === "sortByDate") {
 				return this.getResults( this.sort() );	
 			} else if(typeof sort_by === 'function') {
@@ -343,8 +341,7 @@ var fin = function fin(obj_path, object){
 			}
 		},
 
-		result: function() {		
-			//console.log('result')				
+		result: function() {					
 			return this.getResults( [this.val] );
 		},
 
@@ -352,28 +349,21 @@ var fin = function fin(obj_path, object){
 			// create data structure			
 			var results = {};			
 			
-			function buildTree(dot_path, val) {
-				//console.log(dot_path, val)
+			function buildTree(dot_path, val) {				
 				// build tree				
-				var dot_path_array = dot_path.split('.');	
-				//console.log(dot_path_array)
+				var dot_path_array = dot_path.split('.');					
 				var key = dot_path_array.shift()
-				if(dot_path_array.length > 0) {
-					//console.log(1)
+				if(dot_path_array.length > 0) {					
 					results[ key ] = results[ key ] || {}
-				}	else {
-					//console.log(2)
+				}	else {					
 					results[ key ] = val						 
 				}	
 				var path = results[ key ];
-
-					//console.log('-0-0-0-0-', dot_path_array)
+					
 				for(var i=0; i<dot_path_array.length; i++) {						
-					if(i === dot_path_array.length-1) {		
-						//console.log(3)					
+					if(i === dot_path_array.length-1) {								
 						path = path[dot_path_array[i]] = val;	
-					} else {		
-						//console.log(4)					
+					} else {								
 						path = path[dot_path_array[i]] = {};
 					}						
 				}
@@ -382,8 +372,7 @@ var fin = function fin(obj_path, object){
 				return path;
 			}
 
-			for(var i=0; i<sorted_array.length; i++) {
-				//console.log('>>>>>',i)
+			for(var i=0; i<sorted_array.length; i++) {				
 				
 				var key = this.last_key + "." + sorted_array[i].rowid
 				
@@ -391,15 +380,13 @@ var fin = function fin(obj_path, object){
 				
 				// resolve dot references, todo: use schema to find dot reference values and dotreference arrays
 				// build a proper recursive function
-				for(var prop in sorted_array[i]) {
-					//console.log(prop, sorted_array[i][prop])
+				for(var prop in sorted_array[i]) {					
 					if(typeof sorted_array[i][prop] === 'string' && sorted_array[i][prop].substr(0, 2) === '--' ) {
 						var dot_ref = sorted_array[i][prop].substr(2);
 						buildTree(dot_ref, fin(dot_ref).val);
 						
 					}
-				}
-				//console.log('results',results)
+				}				
 			}
 			return results;
 		},
@@ -1200,7 +1187,6 @@ fin.getData = function(_params, _callback) {
 		}
 
 		if(res.meta.redirect) {
-			console.log('redirect')
 			document.location = res.meta.redirect;
 		}
 

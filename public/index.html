@@ -134,6 +134,20 @@ fin.init({
                     content: ['salmon_api_console'] 
                 },
 
+
+                salmon_api_tail: {
+                    parents: ['salmon_api'],
+                    content: ['salmon_api_tail'] 
+                },
+                salmon_api_app: {
+                    parents: ['salmon_api'],
+                    content: ['salmon_api_app'] 
+                },
+                salmon_api_npm: {
+                    parents: ['salmon_api'],
+                    content: ['salmon_api_npm'] 
+                },
+
         /* Guppy */
         guppy: {
             parents: ['global'],
@@ -321,7 +335,12 @@ fin.init({
         'salmon/api/templates': 'salmon_api_templates',
         'salmon/api/forms': 'salmon_api_forms',
         'salmon/api/plugins': 'salmon_api_plugins',
-        'salmon/api/console': 'salmon_api_console',       
+        'salmon/api/console': 'salmon_api_console',  
+
+        'salmon/api/app': 'salmon_api_app', 
+        'salmon/api/tail': 'salmon_api_tail',        
+        'salmon/api/npm': 'salmon_api_npm',        
+
 
         /* Guppy */
         'guppy': 'guppy_start_intro',

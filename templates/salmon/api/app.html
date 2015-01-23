@@ -1,0 +1,32 @@
+<h1>App</h1>
+<p>The <code>/app</code> folder contains your back-end code. Using node's common.js <code>module.exports</code> pattern any .js file in your app folder and subfolders will automatically be included when the salmon node.js process is run, and they'll be namespaced under the <code>tail.app</code> relative to your <code>/app</code> folder's directory structure.</p>
+
+<pre class="prettyprint">
+<code>[[  print( fin.fn.escapeHtml(`
+
+// in the file /app/auth.js
+
+function doSomething() {
+	console.log('do something');
+}
+
+module.exports = {
+	doSomething: doSomething
+};
+
+`) )
+	 ]]</code>
+</pre>
+
+<pre class="prettyprint">
+<code>[[  print( fin.fn.escapeHtml(`
+
+// once your app is running, you can access the doSomething function from any server-side code
+
+tail.app.auth.doSomething(); // prints 'do something'
+
+`) )
+	 ]]</code>
+</pre>
+
+<p>This gives you the flexibility to structure your code in any way you like. Because the framework's namespacing mirrors your directory structure you know exactly where a function is defined and how to access it, and global availability allows you to rapidly prototype and refactor with minimal friction.</p>
