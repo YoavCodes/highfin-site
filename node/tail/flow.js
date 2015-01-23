@@ -1,27 +1,6 @@
 // basic control flow
 // inspired by the excellent kuji library https://github.com/kubekhrm/kuji
 // todo: add error handling
-/*
-tail.flow.graph({
-  a: function (next) {
-    next()
-  },
-  b: function (next) {
-    next();
-  },
-  c: function (next) {  
-    next();
-  },
-  d: runAfter(['a', 'b'], function (next) {
-    next();
-  }),
-  e: runAfter(['d', 'c'], function (next) {
-    next();
-  })
-}, function () {
-  // This will be executed at the end of your graph
-});
-*/
 
 var Task = function (graph, task) {
     var self = this;
@@ -118,7 +97,8 @@ var flow = {
 
     // Helper for adding dependencies to task
     runAfter: function (dependencies, task) {                        
-        return task.dependencies = dependencies;
+        task.dependencies = dependencies;
+        return task;
     },
 
     // Creates a graph from tasks array and run it
@@ -126,8 +106,9 @@ var flow = {
         var _graph = new Graph();
 
         // Add all tasks to graph
-        for (var i in tasks)
+        for (var i in tasks) 
             _graph.addTask(i, tasks[i]);
+        
 
         if (finalCallback)
             _graph.setFinalCallback(finalCallback);
