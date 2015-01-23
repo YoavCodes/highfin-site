@@ -1,8 +1,8 @@
 <h1>Templates</h1>
 
-<p>Salmon has a rich templating format. Imagine a compiled template as a core template format, which is essentially a javascript file wrapped in a closure that has access a set of template methods, the data passed directly into the template, and the <code>fin</code> namespace, which is all then wrapped in an error handling mechanism that gives you smart errors with line numbers in the console that map to your pre-compiled templates.</p> 
+<p>Salmon has a rich templating format. Imagine a compiled template as a core template format, which is essentially a javascript file wrapped in a closure that has access to a set of template methods, the data passed directly into the template, and the <code>fin</code> namespace; which is all then wrapped in an error handling mechanism that gives you smart errors with line numbers in the console that map to your pre-compiled templates.</p> 
 
-<p>When you actually code templates you do so in two dirivative formats in <code>.html</code> or <code>.js</code> files saved in the <code>/templates</code> folder. The framework will then take these two sub-formats and compile &amp; cache them into the core format. The list of templates to render for a given page is declared in the <code>navigate</code> property of the <a class="type" href="/#!/salmon/api/init">configuration</a> object.</p> 
+<p>When you actually code templates you do so in two derivative formats in <code>.html</code> or <code>.js</code> files saved in the <code>/templates</code> folder. The framework will then take these two sub-formats and compile &amp; cache them into the core format. The list of templates to render for a given page is declared in the <code>navigate</code> property of the <a class="type" href="/#!/salmon/api/init">configuration</a> object.</p> 
 
 <p><code>fin.nav()</code> reads the navigate object for the page being loaded and checks to see that all required templates are cached, if some are missing a request will be made to the <code>tail</code> server and all missing templates needed for that page will be returned in a single response, along with any data required at page render time.</p>
 
