@@ -1,0 +1,120 @@
+<h1>Control Flow</h1>
+<p>Node.js is designed to be an asynchronous, event-driven, non-blocking platform. There are times however when you want to tightly control when one thing happens in relation to another without a complex web of nested callbacks. That's where <code>tail.flow</code> comes in.</p>
+
+<h2>Parallel</h2>
+<p>At times when multiple synchronous tasks can be run at the same time without conflict, like reading 'synchronously' from two different disks at the same time.</p>
+<div class="signature"><span class="fn">tail.flow.parallel( <span class="parameter">...fn</span> )</span> <span class="returns">Returns: <a class="type" href="">undefined</a></span>    
+	<div class="description">Run functions in parallel.</div>       
+    <div class="params">
+        <div class="param"><span class="parameter">...fn</span> : <a class="type">Function</a></div>
+        <div class="description">Specify functions as arguments to be executed in parallel. Each function will be passed a <span class="parameter">next</span> function as a first argument, call each function's <code>next()</code> function when it's done. The last function specified will not receive a <span class="parameter">next</span> function and will only be called when all the others are done.</div>       
+    </div>
+</div>
+
+
+<pre class="prettyprint">
+<code>
+Example Parallel Flow:[[  print( fin.fn.escapeHtml(`
+
+// the first two functions will execute in parallel
+
+tail.flow.parallel(
+  function (next) {
+    next()
+  },
+  function (next) {
+    next();
+  },
+  function () {  
+  	// this will be executed after the first two have called next()    
+  });
+
+`) )
+	 ]]</code>
+</pre>
+
+<h2>Series</h2>
+<p>At times you may want a mix of synchronous and/or asynchronous functions to run in a specific order.</p>
+<div class="signature"><span class="fn">tail.flow.series( <span class="parameter">...fn</span> )</span> <span class="returns">Returns: <a class="type" href="">undefined</a></span>    
+	<div class="description">Run functions in series.</div>       
+    <div class="params">
+        <div class="param"><span class="parameter">...fn</span> : <a class="type">Function</a></div>
+        <div class="description">Specify functions as arguments to be executed in series. Each function will be passed a <span class="parameter">next</span> function as a first argument, call each function's <code>next()</code> function when it's done.</div>       
+    </div>
+</div>
+
+<pre class="prettyprint">
+<code>
+Example Series Flow:[[  print( fin.fn.escapeHtml(`
+
+tail.flow.series(
+  function (next) {
+    next()
+  },
+  function (next) {
+    next();
+  },
+  function () {  
+    
+  });
+
+`) )
+	 ]]</code>
+</pre>
+
+<h2>Graph</h2>
+<p>At times you may want an easy way to declare a more complex flow mixing series and parallel approaches without nesting.</p>
+<div class="signature"><span class="fn">tail.flow.graph( <span class="parameter">graph</span>, <span class="parameter">finalCallback</span> )</span> <span class="returns">Returns: <a class="type" href="">undefined</a></span>    
+	<div class="description">Run functions using a parallel/series hybrid graph.</div>       
+    <div class="params">
+        <div class="param"><span class="parameter">graph</span> : <a class="type">Object</a></div>
+        <div class="description">Specify functions as key/value pairs in an object to be executed each with a unique key. Use the <code>tail.flow.runAfter()</code> method to declare functions that depend on other specific functions to be complete before executing. Each function will be passed a <span class="parameter">next</span> function as a first argument, call each function's <code>next()</code> function when it's done.</div>   
+        <div class="param"><span class="parameter">finalCallback</span> : <a class="type">Function</a></div>
+        <div class="description">Specify a function to execute after everything else in the graph is done.</div>       
+    </div>
+</div>
+
+<div class="signature"><span class="fn">tail.flow.runAfter( <span class="parameter">dependencies</span>, <span class="parameter">fn</span> )</span> <span class="returns">Returns: <a class="type" href="">Function</a></span>    
+	<div class="description">Declare dependencies for a graph function.</div>       
+    <div class="params">
+        <div class="param"><span class="parameter">dependencies</span> : <a class="type">Array</a></div>
+        <div class="description">An array of graph keys representing other functions that <span class="parameter">fn</span> requires to be done before executing.</div>   
+        <div class="param"><span class="parameter">fn</span> : <a class="type">Function</a></div>
+        <div class="description">The graph function</div>       
+    </div>
+</div>
+
+
+
+
+<pre class="prettyprint">
+<code>
+Example Graph Flow:[[  print( fin.fn.escapeHtml(`
+
+// a, b, and c will be executed in parallel
+
+tail.flow.graph({
+  a: function (next) {
+    next()
+  },
+  b: function (next) {
+    next();
+  },
+  c: function (next) {  
+    next();
+  },
+  d: tail.flow.runAfter(['a', 'b'], function (next) {
+  	// d will be executed after a and b have called next();
+    next();
+  }),
+  e: tail.flow.runAfter(['c', 'd'], function (next) {
+  	// e will be executed after c and d have called next();
+    next();
+  })
+}, function () {
+  // This will be executed after everything else has called next()
+});
+
+`) )
+	 ]]</code>
+</pre>
