@@ -1,0 +1,117 @@
+<h1>Middleware</h1>
+
+<p>Middleware in Salmon is in it's infancy. At the moment it boils down to a simple pattern that can be used in your routes. Here's an example:</p>
+
+<pre class="prettyprint">
+<code>[[  print( fin.fn.escapeHtml(`
+
+// inside the router function in /config/router.js
+
+switch(segments[0]) {
+	// if the user is in the admin section
+	case "admin":
+		// use authentication middleware pattern
+		tail.app.auth.isAuthed(res, req)
+			.hasSession(function(){
+				// user is logged in
+
+				switch( segments[1] ) {					
+					case "overview":
+						// pass the request/response to some app code
+						tail.app.blog.getAllPosts(res);
+						break;
+					default:
+						// "logged in" users hitting undefined page off /#!/admin, or page that 
+						// requires you to be logged out like the login or registration pages 
+						// should be redirected to the admin overview page
+						res.redirect('/#!/admin/overview');
+						res.kill();
+						break;
+				}
+			})
+			.noSession(function(){
+				// user is NOT logged in
+				switch( segments[1] ) {
+					case "login":
+					case "register":
+						// the login and register pages don't need any data on the client so just 
+						// end here
+						res.kill();
+						break;					
+					default:
+						// "logged out" users in accessing auth-required page should be 
+						// redirected to the login page users hitting undefined page off 
+						// /#!/admin should also be redirected to login
+						res.redirect('/#!/admin/login');
+						res.kill();
+						break;
+				}
+			}
+			})
+		break;
+	default:
+		// in this contrived example there are only routes for admin/overview, admin/login, 
+		// and admin/register, the server doesn't know about any other front-end defined 
+		// pages, those will just hit this default route and respond without any data
+		res.kill();
+		break;
+}
+
+`) )
+]]</code>
+</pre>
+<p>In the above example the <code>tail.app.auth.isAuthed()</code> function is the middleware. This pattern allows you to determine if the user is logged in or not and then continue branching out via the <code>hasSession</code> or <code>noSession</code> methods. Because those two functions are defined here in the router they share the router scope. Here is what the middleware function looks like: </p>
+
+
+<pre class="prettyprint">
+<code>[[  print( fin.fn.escapeHtml(`
+// in /app/auth.js
+
+function isAuthed(res, req) {
+	var authed = {
+		hasSession: function(fn) { 
+			if(fn) { 
+				this._hasSession = fn; 
+				return this 
+			} else if (this._hasSession) { 
+				this._hasSession() 
+			} 
+			 
+		},
+		_hasSession: null,
+
+		noSession: function(fn) { 
+			if(fn) { 
+				this._noSession = fn; 
+				return this 
+			} else if (this._noSession) { 
+				this._noSession() 
+			} 
+		},
+		_noSession: null,
+
+		check: check
+	}
+
+	function check(fn) {
+		var valid_session = false;
+		
+		// check in db if session_id matches cookie's session id and whether cookie has expired.
+		// if user is still logged in extend the session expiry date in the cookie by modifying 
+		
+		/*.. code here ..*/
+
+		if(valid_session === true) {
+			authed.hasSession();
+		} else {
+			authed.noSession();
+		}
+	}
+
+	return authed;
+}
+
+`) )
+]]</code>
+</pre>
+<p>The isAuthed function allows you to set hasSession and noSession functions that will be called if it's determined whether the user is logged in or not. In this case we don't have to pass those functions any parameters because they're defined in the router function and inherit it's scope, meaning they have access to the res object.</p>

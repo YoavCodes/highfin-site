@@ -1,0 +1,20 @@
+<h1>Goldfish</h1>
+<p>Goldfish is an in-process, in-ram, persistent document store, with a simple yet powerful feature set that natively supports data normalization into tables/collections. It supports complex queries built with a BDD style api, reference ID's to point at a record in other collections/tables, schema, methods to resolve references into a response object, and direct compatability with the front-end data model structure used by the Salmon framework. It's great for when you want to remember a few things, rapidly prototype without the burden of having to configure and maintain a more robust database solution, and can actually handle a lot more than you think.</p>
+
+<h2>Queries</h2>
+<p>Queries are made using the same dot syntax and BDD style filtering as the front-end via the <code>tail.db()</code> method. See <code><a href="/#!/salmon/api/finsort">fin().sort()</a></code> for more information.</p>
+
+<h2>Storage</h2>
+<p>A Goldfish database is structurally very similar to the data model used by the fin front-end. It's essentially a giant javascript object that can optionally be normalized to whatever degree you please. Use it as a simple document store or normalize your data and use it like a more traditional table structure. The database checks for changes at a timed interval and if there are changes writes them to disk as JSON.</p>
+
+<p>Currently it's really great for rapid prototyping, and excels at storing small data sets that require high availability and minimal response times.</p>
+
+<p>There are a lot of really awesome features planned to address horizontal and vertical scalability, sharding, auto-migrations, and breaking it out of process and into a standalone database server.</p>
+
+<h2>Schemas</h2>
+<p>Fin's data model has a dotReference feature that allows using keys to reference other collections, and seemlessly traversing through them. For example to get the author's name for a particular blog post with a user's collection and a blog.posts collection you could query <code>tail.db('blog.posts.1.author.name')</code> where the value of author would be '--users.2' on the front-end, to make it less redundant on the server we store part of the value in a schema so on the server the value of author would be '2' and the default value in the schema would be '--users.'.</p>
+
+<p>Schemas also allow you to specify some more abstract data types, like the <code>ref</code> and <code>ref_array</code> as well as more traditional types like string, number, array, and so on. It lets you specify default values for a property and optionally declare a property/value as private. Private values are accessible on the server but stripped out of any results sent to the client.</p>
+
+<h2>Results</h2>
+<p>If we were to fetch a set of blog posts and send it to the client we would need two things to happen once we'd queried the data. We'd want to convert all those server-side dotReferences into their full form, since the front-end never gets a copy of the schema it requires the more verbose form. And second we'd want to fetch all the users associated with the blog posts by resolving those and any other dotReference so all the incidental data is on the client where we need it &mdash; if we were using a normalized table/collection structure. So on the BDD style filtering and sorting API adds a <code>results()</code> method on the server which handles both of those issues and essentially prepares the data for front-end consumption without you having to think about it.</p>

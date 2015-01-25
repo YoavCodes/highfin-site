@@ -151,6 +151,26 @@ fin.init({
                     parents: ['salmon_api'],
                     content: ['salmon_api_controlflow'] 
                 },
+                salmon_api_bootstrap: {
+                    parents: ['salmon_api'],
+                    content: ['salmon_api_bootstrap'] 
+                },
+                salmon_api_endpoint: {
+                    parents: ['salmon_api'],
+                    content: ['salmon_api_endpoint'] 
+                },
+                salmon_api_routing: {
+                    parents: ['salmon_api'],
+                    content: ['salmon_api_routing'] 
+                },
+                salmon_api_goldfish: {
+                    parents: ['salmon_api'],
+                    content: ['salmon_api_goldfish'] 
+                },
+                salmon_api_middleware: {
+                    parents: ['salmon_api'],
+                    content: ['salmon_api_middleware'] 
+                },
 
         /* Guppy */
         guppy: {
@@ -341,10 +361,15 @@ fin.init({
         'salmon/api/plugins': 'salmon_api_plugins',
         'salmon/api/console': 'salmon_api_console',  
 
-        'salmon/api/app': 'salmon_api_app', 
-        'salmon/api/tail': 'salmon_api_tail',        
-        'salmon/api/npm': 'salmon_api_npm',          
-        'salmon/api/controlflow': 'salmon_api_controlflow',       
+        'salmon/api/app': 'salmon_api_app',
+        'salmon/api/tail': 'salmon_api_tail',
+        'salmon/api/npm': 'salmon_api_npm',
+        'salmon/api/controlflow': 'salmon_api_controlflow',
+        'salmon/api/bootstrap': 'salmon_api_bootstrap',
+        'salmon/api/endpoint': 'salmon_api_endpoint',
+        'salmon/api/routing': 'salmon_api_routing',
+        'salmon/api/goldfish': 'salmon_api_goldfish',
+        'salmon/api/middleware': 'salmon_api_middleware',
 
 
         /* Guppy */

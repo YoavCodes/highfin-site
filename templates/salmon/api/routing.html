@@ -1,0 +1,70 @@
+<h1>Server-side routing</h1>
+
+<p>Your server-side routes are defined in <code>/config/router.js</code>. Any request to the api endpoint will be passed onto the router function so you can decide what to do with it. The router function has the following signature:</p>
+
+<div class="signature"><span class="fn">router( <span class="parameter">res</span>, <span class="parameter">req</span>, <span class="parameter">pathname</span>, <span class="parameter">segments</span>, <span class="parameter">command</span> )</span> <span class="returns">Returns: <a class="type" href="">undefined</a></span>    
+    <div class="description">Provides the ability to route endpoint requests to the appropriate server-side methods.</div>       
+    <div class="params">
+        <div class="param"><span class="parameter">res</span> : <a class="type">Res</a></div>
+        <div class="description">The Salmon Response object for the current request. It inherits from Node.js response object.</div>
+        <div class="param"><span class="parameter">req</span> : <a class="type">Request</a></div>
+        <div class="description">The Node.js request object for the current request.</div>
+        <div class="param"><span class="parameter">pathname</span> : <a class="type">String</a></div>
+        <div class="description">The part of the url before the /#!/ from which the request originated.</div>  
+        <div class="param"><span class="parameter">segments</span> : <a class="type">Array</a></div>
+        <div class="description">The part of the url after the /#!/ from which the request originated split into an array.</div>   
+        <div class="param"><span class="parameter">command</span> : <a class="type">String</a></div>
+        <div class="description">A manually specified piece of routing information typically used with forms.</div>   
+    </div>
+</div>
+
+
+<p>Inside the routing function you have access to all your app code at <code>tail.app</code>. Typically you'd call some relevant method passing it the <code>res</code> object allowing that method to call <code>res.kill()</code> when it's ready to return a response.</p>
+
+<p>The res object inherits from Node.js Response object, but provides some helper methods to make the response/request more manageable as it's passed through the routing layers of your app.</p>
+
+
+<pre class="prettyprint">
+<code>[[  print( fin.fn.escapeHtml(`
+
+Res = {
+	// the JSON response object that will be returned to the client
+	response: {
+		meta: {
+		    status: 200,
+		    errors: [],
+		},
+		data: {}
+	},
+	// the headers object allows you to add and remove headers from the response before they're actually sent down the pipe.
+	headers: {},
+	// postvars will automatically be parsed into the fields object
+	fields: {},
+	// likewise any uploaded files will be parsed and made available via the files object
+	files: {},
+	// we store the node.js request object inside res for convenient access
+	req: {},
+	// we also store the pathname, hashbang, and command for easy access
+	pathname: '',
+	hashbang: [],
+	command: '',
+	// the 'errors' array found in res.response.meta is not the only message array,
+	// you can specify any other message array, and add to it by calling res.msg('array_name', 'msg')
+	msg: msg('array_name', 'msg_content'),
+	// res.error() is a wrapper that adds a message to the error array in the response object, it then kills(ie: sends a response to the client) the response with the provided error code
+	error: error(status_code, 'msg_content'),
+	// redirect is a simple wrapper that sets res.response.redirect = path, when the front-end sees
+	// the redirect property in a response it redirects itself to that path. eg: if you successfully
+	// logged in, you'd send a redirect to the admin 'page' in the one-page application in the response to the login form
+	// submit handler. /#!/blog/admin
+	redirect: redirect('path'),
+	// kill() takes a status code and contentType. defaults to 200 and 'application/json'
+	// if an ajaxform was used the kill() method will automatically recognize it and wrap the response in the appropriate padding 
+	// ie: JSON-P and the front-end will treat it as any other endpoint request.
+	kill: kill(status_code, contentType),
+}
+
+
+`) )
+]]</code>
+</pre>

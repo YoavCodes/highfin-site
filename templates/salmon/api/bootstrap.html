@@ -1,0 +1,6 @@
+<h1>Bootstrap</h1>
+<p>When you run <code>node salmon</code> in the root directory, salmon includes the core tail server in the <code>/node</code> folder, which in turn walks through the <code>/app</code> folder namespacing the code it finds there onto the <code>tail.app</code> object. Taking advantage of tail's built in control flow capabilities the <code>bootstrap</code> function exported in <code>/config/bootstrap.js</code> will be executed after your <code>/app</code> folder code is loaded, but before the tail server starts listening for incoming requests.</p>
+
+<p>This is great for initiating connections or seeding rows in a database, establishing heartbeats with other parts of your app or any other synchronous and asynchronous functionality you need to bootstrap your app process when it loads.</p>
+
+<p>The bootstrap function is passed a <code>next</code> method as it's only parameter, simply call it when you're ready to start listening.</p>
